@@ -20,7 +20,7 @@ class SignInPage extends StatelessWidget {
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               Text(
-                'Fork & Fusion ',
+                'Fork & Fusion',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               Material(
@@ -36,7 +36,6 @@ class SignInPage extends StatelessWidget {
                       prefixIcon: Icon(
                         Icons.mail,
                       ),
-                      
                     ),
                   ),
                 ),
