@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # fork_and_fusion
 
 A new Flutter project.
@@ -14,3 +15,6 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+=======
+# fork_and_fusion
+>>>>>>> 794f7634565eda6627936cd1ed21c3031fa6fc5d
