@@ -22,6 +22,7 @@ class AppThemes {
     onError: Colors.white,
     surface: Color.fromARGB(255, 239, 239, 239),
     onSurface: Color(0xFF121212),
+    inversePrimary: Colors.grey,
   );
   //-------------appbar theme----------------
   static const appBarTheme = AppBarTheme(
@@ -33,10 +34,10 @@ class AppThemes {
     ),
   );
   //------------------text theme-------------
-  static var baseTextStyle = GoogleFonts.itim();
+  static var baseTextStyle = GoogleFonts.itim(color: Colors.black);
 
   static var textTheme = TextTheme(
-    bodyMedium: baseTextStyle,
+    bodyMedium: baseTextStyle.copyWith(fontSize: 17),
     bodySmall: baseTextStyle,
     displayLarge: baseTextStyle,
     displayMedium: baseTextStyle,

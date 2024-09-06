@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:fork_and_fusion/features/presentation/pages/sign_in/widgets/or_widget.dart';
 import 'package:fork_and_fusion/features/presentation/pages/sign_in/widgets/signup_prompt.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/custome_textform_field.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/logo.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/textbutton.dart';
 
-class SignInPage extends StatelessWidget {
-  const SignInPage({super.key});
+class SignUpPage extends StatelessWidget {
+  const SignUpPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     TextEditingController emailController = TextEditingController();
     TextEditingController passwordController = TextEditingController();
+    TextEditingController consfirmPasswordController = TextEditingController();
+    TextEditingController nameController = TextEditingController();
 
     return Scaffold(
       body: LayoutBuilder(builder: (context, constraints) {
@@ -30,15 +31,21 @@ class SignInPage extends StatelessWidget {
                     width: constraints.maxWidth * .5,
                   ),
                   Text(
-                    'Welcome Back ',
+                    'Create Account',
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   SizedBox(
                     width: constraints.maxWidth * .9,
                     child: const Text(
-                      'Enter your email and password to get access your account',
+                      'Please enter valid information to access your account',
                       textAlign: TextAlign.center,
                     ),
+                  ),
+                  gap,
+                  CustomeTextField(
+                    hintText: 'Name',
+                    controller: nameController,
+                    prefixIcon: const Icon(Icons.person),
                   ),
                   gap,
                   CustomeTextField(
@@ -55,22 +62,24 @@ class SignInPage extends StatelessWidget {
                     prefixIcon: const Icon(Icons.lock),
                   ),
                   gap,
+                  CustomeTextField(
+                    hintText: 'Confirm password',
+                    controller: consfirmPasswordController,
+                    obsuceText: true,
+                    suffixIcon: true,
+                    prefixIcon: const Icon(Icons.lock),
+                  ),
+                  gap,
                   CustomeTextButton(
-                    text: 'Login',
+                    text: 'Create Account',
                     onPressed: () {
-                      Navigator.of(context).pushReplacementNamed('/bottomnav');
+                      Navigator.of(context).pop();
                     },
                   ),
                   gap,
-                  const OrDivider(),
-                  gap,
-                  CustomeTextButton(
-                    text: 'Sign in with Google',
-                    onPressed: () {},
-                    google: true,
-                  ),
-                  gap,
-                  AuthPrompt()
+                  AuthPrompt(
+                    signUp: false,
+                  )
                 ],
               ),
             ),

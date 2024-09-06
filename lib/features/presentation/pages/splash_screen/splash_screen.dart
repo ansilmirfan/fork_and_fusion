@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:fork_and_fusion/core/shared/constants.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/logo.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -16,12 +17,14 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     Timer(
       const Duration(seconds: 3),
-      () => Navigator.of(context).pushNamed('/onboard'),
+      () => Navigator.of(context).pushReplacementNamed('/onboard'),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    Constants.dHeight = MediaQuery.of(context).size.height;
+    Constants.dWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Column(
         children: [

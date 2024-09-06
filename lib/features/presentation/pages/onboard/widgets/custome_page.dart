@@ -125,7 +125,7 @@ class CustomePage extends StatelessWidget {
                                       text: 'Get Started',
                                       onPressed: () {
                                         Navigator.of(context)
-                                            .pushNamed('/signin');
+                                            .pushReplacementNamed('/signin');
                                       },
                                     )
                                   : Row(
@@ -135,8 +135,8 @@ class CustomePage extends StatelessWidget {
                                         Visibility(
                                           visible: currentPage == 1,
                                           child: SquareIconButton(
-                                            icon: const Icon(
-                                                Icons.arrow_back_ios_new),
+                                            icon: 
+                                                Icons.arrow_back_ios_new,
                                             onTap: () {
                                               context
                                                   .read<PageBloc>()
@@ -147,8 +147,8 @@ class CustomePage extends StatelessWidget {
                                         Visibility(
                                           visible: currentPage < 2,
                                           child: SquareIconButton(
-                                            icon: const Icon(Icons
-                                                .arrow_forward_ios_rounded),
+                                            icon: Icons
+                                                .arrow_forward_ios_rounded,
                                             onTap: () {
                                               context
                                                   .read<PageBloc>()
