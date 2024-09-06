@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fork_and_fusion/core/shared/constants.dart';
 import 'package:fork_and_fusion/features/presentation/pages/sign_in/widgets/or_widget.dart';
 import 'package:fork_and_fusion/features/presentation/pages/sign_in/widgets/signup_prompt.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/custome_textform_field.dart';
@@ -55,19 +56,26 @@ class SignInPage extends StatelessWidget {
                     prefixIcon: const Icon(Icons.lock),
                   ),
                   gap,
-                  CustomeTextButton(
-                    text: 'Login',
-                    onPressed: () {
-                      Navigator.of(context).pushReplacementNamed('/bottomnav');
-                    },
+                  SizedBox(
+                    width: Constants.dWidth * .9,
+                    child: CustomeTextButton(
+                      text: 'Login',
+                      onPressed: () {
+                        Navigator.of(context)
+                            .pushReplacementNamed('/bottomnav');
+                      },
+                    ),
                   ),
                   gap,
                   const OrDivider(),
                   gap,
-                  CustomeTextButton(
-                    text: 'Sign in with Google',
-                    onPressed: () {},
-                    google: true,
+                  SizedBox(
+                    width: Constants.dWidth * .9,
+                    child: CustomeTextButton(
+                      text: 'Sign in with Google',
+                      onPressed: () {},
+                      google: true,
+                    ),
                   ),
                   gap,
                   AuthPrompt()

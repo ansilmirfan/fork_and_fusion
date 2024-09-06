@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fork_and_fusion/features/presentation/pages/bottom_nav_bar/bottom_nav_bar.dart';
 import 'package:fork_and_fusion/features/presentation/pages/onboard/onboard.dart';
+import 'package:fork_and_fusion/features/presentation/pages/product_view/product_view.dart';
 import 'package:fork_and_fusion/features/presentation/pages/qr_pages.dart/qr_code_scanner.dart';
 import 'package:fork_and_fusion/features/presentation/pages/search/search.dart';
 import 'package:fork_and_fusion/features/presentation/pages/sign_in/sign_in.dart';
@@ -29,7 +30,7 @@ class Routes {
         );
       case '/bottomnav':
         return MaterialPageRoute(
-          builder: (context) =>const BottomNavBar(),
+          builder: (context) => const BottomNavBar(),
         );
       case '/qrscanner':
         return MaterialPageRoute(
@@ -38,6 +39,10 @@ class Routes {
       case '/search':
         return MaterialPageRoute(
           builder: (context) => const Search(),
+        );
+      case '/productview':
+        return MaterialPageRoute(
+          builder: (context) =>const  ProductView(),
         );
 
       default:

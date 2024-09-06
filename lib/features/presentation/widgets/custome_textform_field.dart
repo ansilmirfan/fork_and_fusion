@@ -8,6 +8,7 @@ class CustomeTextField extends StatefulWidget {
   bool obsuceText;
   bool suffixIcon;
   bool search;
+  bool doubleLine;
 
   CustomeTextField({
     super.key,
@@ -18,6 +19,7 @@ class CustomeTextField extends StatefulWidget {
     this.obsuceText = false,
     this.suffixIcon = false,
     this.search = false,
+    this.doubleLine = false,
   });
 
   @override
@@ -37,12 +39,13 @@ class _CustomeTextFieldState extends State<CustomeTextField> {
           elevation: 5,
           child: SizedBox(
             width: constraints.maxWidth * .9,
-            height: 50,
+            height: widget.doubleLine ? 90 : 50,
             child: TextFormField(
               onChanged: widget.onChanged,
               validator: validator,
               controller: widget.controller,
               obscureText: widget.obsuceText,
+              maxLines: widget.doubleLine ? 2 : 1,
               //--------text style--------------
               style: Theme.of(context)
                   .textTheme

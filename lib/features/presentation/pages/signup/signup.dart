@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fork_and_fusion/core/shared/constants.dart';
 import 'package:fork_and_fusion/features/presentation/pages/sign_in/widgets/signup_prompt.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/custome_textform_field.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/logo.dart';
@@ -70,11 +71,14 @@ class SignUpPage extends StatelessWidget {
                     prefixIcon: const Icon(Icons.lock),
                   ),
                   gap,
-                  CustomeTextButton(
-                    text: 'Create Account',
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
+                  SizedBox(
+                    width: Constants.dWidth * .9,
+                    child: CustomeTextButton(
+                      text: 'Create Account',
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
                   ),
                   gap,
                   AuthPrompt(

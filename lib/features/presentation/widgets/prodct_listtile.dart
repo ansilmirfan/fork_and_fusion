@@ -15,7 +15,9 @@ class ProductListTile extends StatelessWidget {
         borderRadius: Constants.radius,
         elevation: 10,
         child: InkWell(
-          onTap: () {},
+          onTap: () {
+            Navigator.of(context).pushNamed('/productview');
+          },
           child: Container(
             height: height * 0.18,
             padding: const EdgeInsets.all(5),
@@ -23,7 +25,7 @@ class ProductListTile extends StatelessWidget {
               children: [
                 SizedBox(
                   height: height * .18 - 5,
-                  width:height * .18 - 5 ,
+                  width: height * .18 - 5,
                   child: ClipRRect(
                     borderRadius: Constants.radius,
                     child: const CacheImage(),

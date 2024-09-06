@@ -50,7 +50,11 @@ class Carousal extends StatelessWidget {
                                 color: Colors.transparent,
                                 child: InkWell(
                                   borderRadius: Constants.radius,
-                                  onTap: () {},
+                                  onTap: () {
+                                    Navigator.of(context).pushNamed(
+                                      '/productview'
+                                    );
+                                  },
                                 ),
                               ),
                             ),
