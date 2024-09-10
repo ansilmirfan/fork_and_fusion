@@ -8,6 +8,7 @@ class AppThemes {
     appBarTheme: appBarTheme,
     textTheme: textTheme,
     filledButtonTheme: filledButtonTheme,
+   
   );
   //-------------color theme-----------------
   static const colorScheme = ColorScheme(
@@ -25,11 +26,12 @@ class AppThemes {
     inversePrimary: Colors.grey,
   );
   //-------------appbar theme----------------
-  static const appBarTheme = AppBarTheme(
-    backgroundColor: Color(0xFFFF6B01),
+  static var appBarTheme = AppBarTheme(
+    backgroundColor: const Color(0xFFFF6B01),
     foregroundColor: Colors.white,
     centerTitle: true,
-    actionsIconTheme: IconThemeData(
+    titleTextStyle: GoogleFonts.itim(fontSize: 25),
+    actionsIconTheme: const IconThemeData(
       color: Colors.white,
     ),
   );
@@ -58,9 +60,7 @@ class AppThemes {
       color: Colors.black,
       fontSize: 30,
     ),
-    bodyLarge: baseTextStyle.copyWith(
-      color: Colors.white,
-    ),
+    
   );
 //---------filled button -----------
   static const filledButtonTheme = FilledButtonThemeData(

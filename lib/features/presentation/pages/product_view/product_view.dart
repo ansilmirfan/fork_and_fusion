@@ -90,7 +90,7 @@ class ProductView extends StatelessWidget {
                 color: Theme.of(context).colorScheme.tertiary,
                 child: Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.all(10),
+                  padding: Constants.padding10,
                   child: Column(
                     children: [
                       const Text('Add a cooking Request (optional)'),
@@ -133,7 +133,7 @@ class ProductView extends StatelessWidget {
                 text: 'Add to Cart',
                 icon: const Icon(Icons.shopping_cart),
                 onPressed: () {},
-              )
+              ),
             ],
           ),
         ),

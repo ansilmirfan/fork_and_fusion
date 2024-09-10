@@ -14,13 +14,18 @@ class CustomeTextButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isEnabled = onPressed != null;
     return Material(
       borderRadius: BorderRadius.circular(10),
       elevation: 10,
       child: FilledButton(
         style: ButtonStyle(
           backgroundColor: WidgetStatePropertyAll(
-            google ? Colors.blue : const Color(0xFFFF6B01),
+            isEnabled
+                ? google
+                    ? Colors.blue
+                    : const Color(0xFFFF6B01)
+                : Colors.grey,
           ),
           shape: const WidgetStatePropertyAll(
             RoundedRectangleBorder(

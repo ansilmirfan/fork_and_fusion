@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fork_and_fusion/features/presentation/pages/bottom_nav_bar/bottom_nav_bar.dart';
 import 'package:fork_and_fusion/features/presentation/pages/onboard/onboard.dart';
+import 'package:fork_and_fusion/features/presentation/pages/order_view/order_view.dart';
 import 'package:fork_and_fusion/features/presentation/pages/product_view/product_view.dart';
 import 'package:fork_and_fusion/features/presentation/pages/qr_pages.dart/qr_code_scanner.dart';
 import 'package:fork_and_fusion/features/presentation/pages/search/search.dart';
@@ -42,8 +43,15 @@ class Routes {
         );
       case '/productview':
         return MaterialPageRoute(
-          builder: (context) =>const  ProductView(),
+          builder: (context) => const ProductView(),
         );
+      case '/orderview':
+        if (args is bool) {
+          return MaterialPageRoute(
+            builder: (context) => OrderView(today: args,),
+          );
+        }
+        return errorRoutes();
 
       default:
         return errorRoutes();

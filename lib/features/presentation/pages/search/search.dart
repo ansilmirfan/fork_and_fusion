@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fork_and_fusion/core/shared/constants.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/custome_textform_field.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/filter_bottom_sheet.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/prodct_listtile.dart';
@@ -22,7 +23,7 @@ class Search extends StatelessWidget {
                 padding: const EdgeInsets.all(10),
                 itemCount: 10,
                 itemBuilder: (context, index) => ProductListTile(
-                  height: MediaQuery.of(context).size.height,
+              
                 ),
               ),
             ),
@@ -35,7 +36,7 @@ class Search extends StatelessWidget {
   Container _buildTextFielAndFilter(
       TextEditingController searchController, BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      padding: Constants.padding10,
       child: Column(
         children: [
           Row(

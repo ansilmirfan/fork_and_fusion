@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fork_and_fusion/features/presentation/bloc/cart_quantity/cart_quantity_bloc.dart';
 import 'package:fork_and_fusion/features/presentation/routs/routes.dart';
 import 'package:fork_and_fusion/features/presentation/themes/themes.dart';
 
@@ -11,11 +13,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: AppThemes.primaryTheme,
-      onGenerateRoute: Routes.routes,
-      initialRoute: '/',
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => CartQuantityBloc()),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: AppThemes.primaryTheme,
+        onGenerateRoute: Routes.routes,
+        initialRoute: '/',
+      ),
     );
   }
 }

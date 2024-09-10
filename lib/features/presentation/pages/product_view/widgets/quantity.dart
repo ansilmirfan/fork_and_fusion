@@ -16,6 +16,7 @@ class Quantity extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               SquareIconButton(
+                white: false,
                 icon: Icons.remove,
                 onTap: () {
                   context.read<QuantityBloc>().add(QuantityReduceEvent());
@@ -36,6 +37,7 @@ class Quantity extends StatelessWidget {
                 ),
               ),
               SquareIconButton(
+                white: false,
                 icon: Icons.add,
                 onTap: () {
                   context.read<QuantityBloc>().add(QuantityAddEvent());

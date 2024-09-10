@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fork_and_fusion/core/shared/constants.dart';
+import 'package:fork_and_fusion/features/presentation/pages/sign_in/widgets/or_widget.dart';
 import 'package:fork_and_fusion/features/presentation/pages/sign_in/widgets/signup_prompt.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/custome_textform_field.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/logo.dart';
@@ -81,9 +82,19 @@ class SignUpPage extends StatelessWidget {
                     ),
                   ),
                   gap,
+                  const OrDivider(),
+                  gap,
+                  SizedBox(
+                    width: Constants.dWidth * .9,
+                    child: CustomeTextButton(
+                      text: 'Signup with Google',
+                      google: true,
+                      onPressed: () {},
+                    ),
+                  ),
                   AuthPrompt(
                     signUp: false,
-                  )
+                  ),
                 ],
               ),
             ),

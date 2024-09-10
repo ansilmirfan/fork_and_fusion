@@ -1,6 +1,9 @@
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:fork_and_fusion/features/presentation/pages/home/home.dart';
+import 'package:fork_and_fusion/features/presentation/pages/bottom_nav_bar/cart/cart.dart';
+import 'package:fork_and_fusion/features/presentation/pages/bottom_nav_bar/history/history.dart';
+import 'package:fork_and_fusion/features/presentation/pages/bottom_nav_bar/home/home.dart';
+import 'package:fork_and_fusion/features/presentation/pages/bottom_nav_bar/settings/settings.dart';
 
 class BottomNavBarData {
   static const primaryColor = Color(0xFFFF6B01);
@@ -24,8 +27,8 @@ class BottomNavBarData {
   ];
   static var pages = [
     Home(),
-    Center(child: Text("cart")),
-    Center(child: Text("history Page")),
-    Center(child: Text("Settings Page")),
+    const Cart(),
+    const History(),
+    const Settings(),
   ];
 }

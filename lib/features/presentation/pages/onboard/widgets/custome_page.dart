@@ -92,7 +92,7 @@ class CustomePage extends StatelessWidget {
                             child: SizedBox(
                               child: Text(
                                 description,
-                                style: Theme.of(context).textTheme.bodyLarge,
+                                style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white),
                                 textAlign: TextAlign.center,
                               ),
                             ),
