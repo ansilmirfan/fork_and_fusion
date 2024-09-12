@@ -20,7 +20,7 @@ class Cart extends StatelessWidget {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          customAppbar(context),
+          CustomAppbar(),
           SliverToBoxAdapter(
             child: Padding(
               padding: Constants.padding10,

@@ -25,8 +25,9 @@ class FirebaseAuthRepository implements AuthRepository {
   }
 
   @override
-  Future<UserEntity?> signUpWithEmail(String email, String password) async {
-    final user = await dataSource.signUpWithEmail(email, password);
+  Future<UserEntity?> signUpWithEmail(
+      String email, String password, String name) async {
+    final user = await dataSource.signUpWithEmail(email, password, name);
     if (user != null) {
       return UserModel.fromFireBaseUser(user);
     }
@@ -34,7 +35,21 @@ class FirebaseAuthRepository implements AuthRepository {
   }
 
   @override
+  bool alreadyLoggedIn() {
+    return dataSource.alreadyLoggedIn();
+  }
+
+  @override
   Future<void> signOut() async {
     await dataSource.signOut();
+  }
+
+  @override
+  Future<UserEntity?> currentUser() async {
+    final user = await dataSource.currentUser();
+    if (user != null) {
+      return UserModel.fromFireBaseUser(user);
+    }
+    return null;
   }
 }

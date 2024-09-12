@@ -13,8 +13,9 @@ class AuthSignInWithEmailEvent extends AuthEvent {
 
 class AuthSignUpWithEmailEvent extends AuthEvent {
   String email;
+  String name;
   String password;
-  AuthSignUpWithEmailEvent(this.email, this.password);
+  AuthSignUpWithEmailEvent(this.email, this.password, this.name);
 }
 
 class AuthAlreadyLoggedInCheckEvent extends AuthEvent {}

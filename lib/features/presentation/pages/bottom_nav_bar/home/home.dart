@@ -20,7 +20,7 @@ class Home extends StatelessWidget {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          customAppbar(context, scanner: true),
+          CustomAppbar( scanner: true),
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
