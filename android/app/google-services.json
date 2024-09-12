@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1055687672689",
+    "firebase_url": "https://fork-and-fusion-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "fork-and-fusion",
+    "storage_bucket": "fork-and-fusion.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1055687672689:android:fe7d8e19b6809da47cecd0",
+        "android_client_info": {
+          "package_name": "com.ansil.fork_and_fusion"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1055687672689-jsqvfvkr3irjrnp9pfa6onv89ukk927b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ansil.fork_and_fusion",
+            "certificate_hash": "6cef715bc8eefb2d02f773da0dc07f031542dff8"
+          }
+        },
+        {
+          "client_id": "1055687672689-ebtlltaau4savf7ea6j1f8r9n6jsp61r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnVe0tUmpz1dZnEJt7HbdqgcWJDvjlJyM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1055687672689-ebtlltaau4savf7ea6j1f8r9n6jsp61r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

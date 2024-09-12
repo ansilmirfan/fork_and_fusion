@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Constants {
+  static GlobalKey<FormState> signUp = GlobalKey<FormState>();
   static var radius = BorderRadius.circular(10);
   static var dWidth = 0.0;
   static var dHeight = 0.0;

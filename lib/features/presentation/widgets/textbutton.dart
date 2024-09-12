@@ -4,12 +4,14 @@ class CustomeTextButton extends StatelessWidget {
   String text;
   void Function()? onPressed;
   bool google;
+  bool progress;
   Icon? icon;
   CustomeTextButton(
       {super.key,
-      required this.text,
+      this.text = '',
       this.onPressed,
       this.google = false,
+      this.progress = false,
       this.icon});
 
   @override
@@ -59,10 +61,12 @@ class CustomeTextButton extends StatelessWidget {
               child: icon ?? const SizedBox.shrink(),
             ),
             const Spacer(),
-            Text(
-              text,
-              style: const TextStyle(fontSize: 20),
-            ),
+            progress
+                ? const CircularProgressIndicator()
+                : Text(
+                    text,
+                    style: const TextStyle(fontSize: 20),
+                  ),
             const Spacer(),
           ],
         ),

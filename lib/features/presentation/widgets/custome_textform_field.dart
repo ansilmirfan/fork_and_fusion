@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 
 class CustomeTextField extends StatefulWidget {
-  String hintText;
-  TextEditingController controller;
-  Icon? prefixIcon;
-  void Function(String)? onChanged;
+  final String hintText;
+  final TextEditingController controller;
+  final Icon? prefixIcon;
+  final void Function(String)? onChanged;
   bool obsuceText;
-  bool suffixIcon;
-  bool search;
-  bool doubleLine;
+  final bool suffixIcon;
+  final bool search;
+  final bool doubleLine;
+  final String? Function(String?)? validator;
 
   CustomeTextField({
     super.key,
@@ -20,6 +21,7 @@ class CustomeTextField extends StatefulWidget {
     this.suffixIcon = false,
     this.search = false,
     this.doubleLine = false,
+    this.validator,
   });
 
   @override
@@ -27,8 +29,6 @@ class CustomeTextField extends StatefulWidget {
 }
 
 class _CustomeTextFieldState extends State<CustomeTextField> {
-  String? Function(String?)? validator;
-
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -39,36 +39,29 @@ class _CustomeTextFieldState extends State<CustomeTextField> {
           elevation: 5,
           child: SizedBox(
             width: constraints.maxWidth * .9,
-            height: widget.doubleLine ? 90 : 50,
             child: TextFormField(
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               onChanged: widget.onChanged,
-              validator: validator,
+              validator: widget.validator,
               controller: widget.controller,
               obscureText: widget.obsuceText,
               maxLines: widget.doubleLine ? 2 : 1,
-              //--------text style--------------
-              style: Theme.of(context)
-                  .textTheme
-                  .labelLarge
-                  ?.copyWith(color: Colors.black, fontSize: 20),
-              //-----------input decoration----------------
+              style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                    color: Colors.black,
+                    fontSize: 20,
+                  ),
               decoration: InputDecoration(
-                contentPadding: const EdgeInsets.only(
-                  left: 12.0,
-                  right: 12.0,
-                  top: 15.0,
-                  bottom: 15.0,
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 12.0,
+                  vertical: 15.0,
                 ),
-                hintStyle: Theme.of(context)
-                    .textTheme
-                    .labelLarge
-                    ?.copyWith(color: Colors.grey, fontSize: 17),
+                hintStyle: Theme.of(context).textTheme.labelLarge?.copyWith(
+                      color: Colors.grey,
+                      fontSize: 17,
+                    ),
                 border: InputBorder.none,
                 hintText: widget.hintText,
                 prefixIcon: widget.prefixIcon,
-                prefixIconColor: Theme.of(context).colorScheme.inversePrimary,
-                suffixIconColor: Theme.of(context).colorScheme.inversePrimary,
-                //-----------suffix icon---------------------
                 suffixIcon: widget.suffixIcon
                     ? widget.search
                         ? InkWell(
@@ -90,6 +83,10 @@ class _CustomeTextFieldState extends State<CustomeTextField> {
                             ),
                           )
                     : null,
+                errorStyle: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: Colors.red,
+                      fontSize: 12,
+                    ),
               ),
             ),
           ),

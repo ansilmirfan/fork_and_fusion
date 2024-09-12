@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fork_and_fusion/features/presentation/pages/onboard/bloc/page_bloc.dart';
-import 'package:fork_and_fusion/features/presentation/pages/onboard/widgets/custome_page.dart';
+import 'package:fork_and_fusion/features/presentation/pages/bottom_nav_bar/onboard/bloc/page_bloc.dart';
+import 'package:fork_and_fusion/features/presentation/pages/bottom_nav_bar/onboard/widgets/custome_page.dart';
 
 class Onboard extends StatefulWidget {
   const Onboard({super.key});
