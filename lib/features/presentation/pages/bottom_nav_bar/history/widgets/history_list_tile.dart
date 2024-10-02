@@ -19,7 +19,7 @@ class HistoryListTile extends StatelessWidget {
         child: InkWell(
           borderRadius: Constants.radius,
           onTap: () {
-            Navigator.of(context).pushNamed('/orderview',arguments:today );
+            Navigator.of(context).pushNamed('/orderview', arguments: today);
           },
           child: Container(
             padding: const EdgeInsets.all(10),
@@ -31,7 +31,7 @@ class HistoryListTile extends StatelessWidget {
                 RichLabelText(text1: 'Order Time:', text2: '10:05 AM'),
                 Visibility(
                   visible: today,
-                  child: CustomeTextButton(
+                  child: CustomTextButton(
                     text: 'Cancel',
                     onPressed: index.isOdd ? () {} : null,
                   ),

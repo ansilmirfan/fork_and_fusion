@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fork_and_fusion/core/shared/constants.dart';
+import 'package:fork_and_fusion/core/utils/utils.dart';
+import 'package:fork_and_fusion/features/domain/entity/product.dart';
 import 'package:fork_and_fusion/features/presentation/bloc/cart_quantity/cart_quantity_bloc.dart';
-import 'package:fork_and_fusion/features/presentation/pages/order_view/widgets/rating_dialog.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/cache_image.dart';
-import 'package:fork_and_fusion/features/presentation/widgets/square_icon_button.dart';
+import 'package:fork_and_fusion/features/presentation/widgets/product_listtile/trailing.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/textbutton.dart';
 
 class ProductListTile extends StatelessWidget {
   ListType type;
   bool parcel;
+  ProductEntity? product;
   CartQuantityBloc? bloc;
   ProductListTile(
       {super.key,
+      this.product,
       this.bloc,
       this.type = ListType.productView,
       this.parcel = false});
@@ -28,7 +31,7 @@ class ProductListTile extends StatelessWidget {
         color: Theme.of(context).colorScheme.tertiary,
         child: InkWell(
           onTap: () {
-            Navigator.of(context).pushNamed('/productview');
+            Navigator.of(context).pushNamed('/productview', arguments: product);
           },
           child: Container(
             height: type == ListType.historyViewToday
@@ -45,10 +48,8 @@ class ProductListTile extends StatelessWidget {
                           _buildTrailing(type, context),
                         ],
                       ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      CustomeTextButton(
+                      const SizedBox(height: 5),
+                      CustomTextButton(
                         text: 'Cancel',
                         onPressed: () {},
                       )
@@ -56,7 +57,7 @@ class ProductListTile extends StatelessWidget {
                   )
                 : Row(
                     children: [
-                      _buildImage(height),
+                      _buildImage(height, product?.image.first ?? ''),
                       _buildProductDetails(context),
                       _buildTrailing(type, context),
                     ],
@@ -70,82 +71,11 @@ class ProductListTile extends StatelessWidget {
   Expanded _buildTrailing(ListType type, BuildContext context) {
     switch (type) {
       case ListType.productView:
-        return Expanded(
-          child: Container(
-            padding: const EdgeInsets.only(bottom: 5),
-            child: Column(
-              children: [
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.favorite_border),
-                ),
-                Expanded(
-                  child: SquareIconButton(
-                    icon: Icons.add,
-                    height: 15,
-                    white: false,
-                    onTap: () {},
-                  ),
-                )
-              ],
-            ),
-          ),
-        );
+        return Trailing.productViewTrailing();
       case ListType.cartView:
-        return Expanded(
-            child: BlocBuilder<CartQuantityBloc, CartQuantityState>(
-          bloc: bloc,
-          builder: (context, state) {
-            if (state is CartQuantityInitialState) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SquareIconButton(
-                    icon: Icons.add,
-                    white: false,
-                    onTap: () => bloc?.add(CartQuantityAddEvent()),
-                  ),
-                  Material(
-                    borderRadius: Constants.radius,
-                    elevation: 10,
-                    color: Theme.of(context).colorScheme.tertiary,
-                    child: Container(
-                      width: 40,
-                      padding: Constants.padding10,
-                      child: Text(
-                        state.quantity.toString(),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                  SquareIconButton(
-                    icon: Icons.remove,
-                    white: false,
-                    onTap: () => bloc?.add(CartQuantityReduceEvent()),
-                  ),
-                ],
-              );
-            }
-            return Constants.none;
-          },
-        ));
+        return Trailing.cartViewTrailing(bloc!);
       case ListType.historyView:
-        return Expanded(
-            child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            IconButton(
-              onPressed: () async {
-                await ratingDialog(context);
-              },
-              icon: const Icon(
-                Icons.star_border,
-                size: 35,
-              ),
-            ),
-            const Text('Rate')
-          ],
-        ));
+        return Trailing.historyViewTrailing(context);
 
       default:
         return const Expanded(child: SizedBox());
@@ -162,26 +92,36 @@ class ProductListTile extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Dish Name'),
+            //-------product name------------
+            Text(Utils.capitalizeEachWord(product?.name ?? '')),
+            //-----------quantity--------------------
+            //--------visible only if it is in the history page------------
             Visibility(
               visible: type == ListType.historyView ||
                   type == ListType.historyViewToday,
               child: const Text('X 2'),
             ),
+            //--------------price---------------
             Text(
-              '₹120',
+              '₹${Utils.extractPrice(product!)}',
               style: Theme.of(context)
                   .textTheme
                   .bodyMedium
                   ?.copyWith(color: Theme.of(context).primaryColor),
             ),
+            //---------------rating-----------------
+            //-------------Visible only in cart and product view Not in the order history-------
             Visibility(
               visible: !(type == ListType.historyView ||
                   type == ListType.historyViewToday),
-              child: const Wrap(
-                children: [Icon(Icons.star_border_purple500), Text('4.5')],
+              child: Wrap(
+                children: [
+                  const Icon(Icons.star_border_purple500),
+                  Text('${Utils.calculateRating(product?.rating ?? [])}')
+                ],
               ),
             ),
+            //---------------parcel only in the cart list-------------
             Visibility(
               visible: parcel,
               child: const Text('Parcel'),
@@ -216,17 +156,22 @@ class ProductListTile extends StatelessWidget {
     );
   }
 
-  Stack _buildImage(var height) {
+  Stack _buildImage(var height, [String url = '']) {
     return Stack(
       children: [
-        SizedBox(
-          height: height * .18 - 5,
-          width: height * .18 - 5,
-          child: ClipRRect(
-            borderRadius: Constants.radius,
-            child: const CacheImage(),
+        //-------image--------------
+        Hero(
+          tag: '${product!.id}0',
+          child: SizedBox(
+            height: height * .18 - 5,
+            width: height * .18 - 5,
+            child: ClipRRect(
+              borderRadius: Constants.radius,
+              child: CacheImage(url: url),
+            ),
           ),
         ),
+        //-------------------check box for selecting only visible in the cart area--------
         Visibility(
           visible: type == ListType.cartView,
           child: BlocBuilder<CartQuantityBloc, CartQuantityState>(

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class CustomeTextButton extends StatelessWidget {
+class CustomTextButton extends StatelessWidget {
   String text;
   void Function()? onPressed;
   bool google;
   bool progress;
   Icon? icon;
-  CustomeTextButton(
+  CustomTextButton(
       {super.key,
       this.text = '',
       this.onPressed,

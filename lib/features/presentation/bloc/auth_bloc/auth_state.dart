@@ -7,8 +7,10 @@ final class AuthInitial extends AuthState {}
 
 class AuthLoadingState extends AuthState {}
 
+class AuthSignInLoadingState extends AuthState {}
+
 class AuthCompleatedState extends AuthState {
-    UserEntity user;
+  UserEntity user;
   AuthCompleatedState(this.user);
 }
 
@@ -20,5 +22,3 @@ class AuthErrorState extends AuthState {
 class AlreadyLoggedInState extends AuthState {}
 
 class InitialLoggingState extends AuthState {}
-
-

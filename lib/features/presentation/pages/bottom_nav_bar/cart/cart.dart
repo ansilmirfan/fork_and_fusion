@@ -1,9 +1,8 @@
-
 import 'package:flutter/material.dart';
 import 'package:fork_and_fusion/core/shared/constants.dart';
 import 'package:fork_and_fusion/features/presentation/bloc/cart_quantity/cart_quantity_bloc.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/custome_appbar.dart';
-import 'package:fork_and_fusion/features/presentation/widgets/prodct_listtile.dart';
+import 'package:fork_and_fusion/features/presentation/widgets/product_listtile/prodct_listtile.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/textbutton.dart';
 
 class Cart extends StatelessWidget {
@@ -26,33 +25,45 @@ class Cart extends StatelessWidget {
               padding: Constants.padding10,
               child: Column(
                 children: [
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      'Subtotal 180',
-                      style: Theme.of(context).textTheme.headlineMedium,
-                    ),
-                  ),
+                  subTotalText(context),
                   gap,
-                  CustomeTextButton(
-                    text: 'Proceeds to buy(1 item)',
-                    onPressed: () {},
-                  ),
+                  _buildProceedsToBuyButton(),
                 ],
               ),
             ),
           ),
-          SliverList.builder(
-            itemCount: 15,
-            itemBuilder: (context, index) => Padding(
-              padding: const EdgeInsets.only(left: 10, right: 10),
-              child: ProductListTile(
-                bloc: bloc[index],
-                type: ListType.cartView,
-              ),
-            ),
-          )
+          _buildProducts(bloc)
         ],
+      ),
+    );
+  }
+
+  Align subTotalText(BuildContext context) {
+    return Align(
+      alignment: Alignment.topLeft,
+      child: Text(
+        'Subtotal 180',
+        style: Theme.of(context).textTheme.headlineMedium,
+      ),
+    );
+  }
+
+  CustomTextButton _buildProceedsToBuyButton() {
+    return CustomTextButton(
+      text: 'Proceeds to buy(1 item)',
+      onPressed: () {},
+    );
+  }
+
+  SliverList _buildProducts(List<CartQuantityBloc> bloc) {
+    return SliverList.builder(
+      itemCount: 15,
+      itemBuilder: (context, index) => Padding(
+        padding: const EdgeInsets.only(left: 10, right: 10),
+        child: ProductListTile(
+          bloc: bloc[index],
+          type: ListType.cartView,
+        ),
       ),
     );
   }

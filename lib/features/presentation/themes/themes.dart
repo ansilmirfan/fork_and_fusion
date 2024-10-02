@@ -8,7 +8,6 @@ class AppThemes {
     appBarTheme: appBarTheme,
     textTheme: textTheme,
     filledButtonTheme: filledButtonTheme,
-   
   );
   //-------------color theme-----------------
   static const colorScheme = ColorScheme(
@@ -40,6 +39,7 @@ class AppThemes {
 
   static var textTheme = TextTheme(
     bodyMedium: baseTextStyle.copyWith(fontSize: 17),
+    bodyLarge: baseTextStyle,
     bodySmall: baseTextStyle,
     displayLarge: baseTextStyle,
     displayMedium: baseTextStyle,
@@ -60,7 +60,6 @@ class AppThemes {
       color: Colors.black,
       fontSize: 30,
     ),
-    
   );
 //---------filled button -----------
   static const filledButtonTheme = FilledButtonThemeData(

@@ -1,88 +1,136 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fork_and_fusion/core/shared/constants.dart';
+import 'package:fork_and_fusion/features/domain/entity/product.dart';
+import 'package:fork_and_fusion/features/presentation/bloc/product/product_bloc.dart';
+import 'package:fork_and_fusion/features/presentation/cubit/selected_category_cubit/selected_category_cubit.dart';
 import 'package:fork_and_fusion/features/presentation/pages/bottom_nav_bar/home/widgets/carousal.dart';
 import 'package:fork_and_fusion/features/presentation/pages/bottom_nav_bar/home/widgets/category.dart';
 import 'package:fork_and_fusion/features/presentation/pages/bottom_nav_bar/home/widgets/custome_item_card.dart';
+import 'package:fork_and_fusion/features/presentation/pages/bottom_nav_bar/home/widgets/scanner_icon.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/custome_appbar.dart';
-import 'package:fork_and_fusion/features/presentation/widgets/custome_textform_field.dart';
-import 'package:fork_and_fusion/features/presentation/widgets/filter_bottom_sheet.dart';
-import 'package:fork_and_fusion/features/presentation/widgets/prodct_listtile.dart';
-import 'package:fork_and_fusion/features/presentation/widgets/square_icon_button.dart';
+import 'package:fork_and_fusion/features/presentation/widgets/product_listtile/prodct_listtile.dart';
 
 class Home extends StatelessWidget {
-  Home({super.key});
-  RangeValues rangeValues = const RangeValues(0, 1200);
+  const Home({super.key});
 
   @override
   Widget build(BuildContext context) {
     var gap = const SizedBox(height: 10);
-
+    context.read<SelectedCategoryCubit>();
+    context.read<ProductBloc>();
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          CustomAppbar( scanner: true),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Column(
-                children: [
-                  Carousal(height: Constants.dHeight),
-                  gap,
-                  CustomeItemCard(
-                    height: Constants.dHeight,
-                    title: 'Special offers',
-                  ),
-                  gap,
-                  CustomeItemCard(
-                    height: Constants.dHeight,
-                    title: 'Seasonal foods',
-                    offer: false,
-                  ),
-                  gap,
-                  CategoryHome(width: Constants.dWidth),
-                  _buildTextfield(context),
-                  gap,
-                ],
+      body: BlocBuilder<ProductBloc, ProductState>(
+        builder: (context, state) {
+          if (state is ProductLoadingState) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (state is ProductErrorState) {
+            return Center(child: Text(state.message));
+          }
+          if (state is ProductCompletedState) {
+            return _buildBody(gap, context, state.data);
+          }
+          return const ScannerIcon();
+        },
+      ),
+    );
+  }
+
+  Padding _buildBody(
+      SizedBox gap, BuildContext context, List<ProductEntity> data) {
+   
+  
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: RefreshIndicator(
+        onRefresh: () async {
+          context.read<ProductBloc>().add(FeatchAllProducts());
+        },
+        child: CustomScrollView(
+          slivers: [
+            CustomAppbar(scanner: true),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Column(
+                  children: [
+                    Carousal(data: data),
+                    gap,
+                    _specialOfferCard(data),
+                    gap,
+                    _seasonalFoodsCard(data),
+                    gap,
+                    CategoryScrollView(),
+                    gap,
+                  ],
+                ),
               ),
             ),
-          ),
-          _buildListView(Constants.dHeight),
-        ],
+            _buildListView(data),
+          ],
+        ),
       ),
     );
   }
 
-  SliverList _buildListView(double height) {
+  CustomItemCard _seasonalFoodsCard(List<ProductEntity> data) {
+    return CustomItemCard(
+      data: data,
+      title: 'Seasonal foods',
+      offer: false,
+    );
+  }
+
+  CustomItemCard _specialOfferCard(List<ProductEntity> data) {
+    return CustomItemCard(
+      data: data,
+      title: 'Special offers',
+    );
+  }
+
+  BlocBuilder _buildListView(List<ProductEntity> data) {
+    return BlocBuilder<SelectedCategoryCubit, SelectedCategoryState>(
+      builder: (context, state) {
+        if (state is SelectedCategoryInitialState) {
+          return _listview(data);
+        }
+        if (state is SelectedCategoryChangedState) {
+          if (state.category == 'all') {
+            return _listview(data);
+          } else {
+            final filteredData = data
+                .where((e) =>
+                    e.category.any((element) => element.id == state.category))
+                .toList();
+            return _listview(filteredData);
+          }
+        }
+        return Constants.none;
+      },
+    );
+  }
+
+  _listview(List<ProductEntity> data) {
+    if (data.isEmpty) {
+      return SliverToBoxAdapter(
+        child: SizedBox(
+          height: Constants.dHeight * .25,
+          child: const Center(
+              child: Text(
+            'No products available for this category.',
+            textAlign: TextAlign.center,
+          )),
+        ),
+      );
+    }
+
     return SliverList.builder(
-      itemCount: 5,
+      itemCount: data.length,
       itemBuilder: (context, index) => Padding(
         padding: const EdgeInsets.only(left: 10, right: 10),
-        child: ProductListTile(),
+        child: ProductListTile(product: data[index]),
       ),
-    );
-  }
-
-  _buildTextfield(BuildContext context) {
-    TextEditingController searchController = TextEditingController();
-    return Row(
-      children: [
-        Expanded(
-          child: CustomeTextField(
-            hintText: 'Search...',
-            controller: searchController,
-            prefixIcon: const Icon(Icons.search),
-            search: true,
-            suffixIcon: true,
-          ),
-        ),
-        const SizedBox(width: 5),
-        SquareIconButton(
-          icon: Icons.filter_list_rounded,
-          onTap: () {
-            filterBottomSheet(context);
-          },
-        )
-      ],
     );
   }
 }

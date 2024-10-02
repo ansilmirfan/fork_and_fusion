@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:fork_and_fusion/core/shared/constants.dart';
 
 class Ingrediants extends StatelessWidget {
+  String ingrediants;
   SizedBox gap;
-  Ingrediants({super.key, required this.gap});
+  Ingrediants({super.key, required this.gap, required this.ingrediants});
 
   @override
   Widget build(BuildContext context) {
@@ -13,16 +14,14 @@ class Ingrediants extends StatelessWidget {
       elevation: 10,
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.all(10),
+        padding: Constants.padding10,
         child: Column(
           children: [
-            Text(
-              'Ingrediants',
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
+            Text('Ingrediants',
+                style: Theme.of(context).textTheme.headlineSmall),
             gap,
-            const Text(
-              'egg,water, breadcrumbs small onion,Dijon mustard, salt,Worcestershire sauce, pepper,lean ground beef,hamburger bun',
+            Text(
+              ingrediants,
               maxLines: 10,
               overflow: TextOverflow.ellipsis,
             ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:fork_and_fusion/features/domain/entity/product.dart';
 import 'package:fork_and_fusion/features/presentation/pages/bottom_nav_bar/bottom_nav_bar.dart';
-import 'package:fork_and_fusion/features/presentation/pages/bottom_nav_bar/onboard/onboard.dart';
+import 'package:fork_and_fusion/features/presentation/pages/intro_pages/onboard/onboard.dart';
 import 'package:fork_and_fusion/features/presentation/pages/order_view/order_view.dart';
 import 'package:fork_and_fusion/features/presentation/pages/product_view/product_view.dart';
 import 'package:fork_and_fusion/features/presentation/pages/qr_pages.dart/qr_code_scanner.dart';
@@ -14,37 +15,26 @@ class Routes {
     var args = s.arguments;
     switch (s.name) {
       case '/':
-        return MaterialPageRoute(
-          builder: (context) => const SplashScreen(),
-        );
+        return MaterialPageRoute(builder: (context) => const SplashScreen());
       case '/onboard':
-        return MaterialPageRoute(
-          builder: (context) => const Onboard(),
-        );
+        return MaterialPageRoute(builder: (context) => const Onboard());
       case '/signin':
-        return MaterialPageRoute(
-          builder: (context) => const SignInPage(),
-        );
+        return MaterialPageRoute(builder: (context) => const SignInPage());
       case '/signup':
-        return MaterialPageRoute(
-          builder: (context) => const SignUpPage(),
-        );
+        return MaterialPageRoute(builder: (context) => const SignUpPage());
       case '/bottomnav':
-        return MaterialPageRoute(
-          builder: (context) => const BottomNavBar(),
-        );
+        return MaterialPageRoute(builder: (context) => const BottomNavBar());
       case '/qrscanner':
-        return MaterialPageRoute(
-          builder: (context) => const QRCodeScanner(),
-        );
+        return MaterialPageRoute(builder: (context) => const QRCodeScanner());
       case '/search':
-        return MaterialPageRoute(
-          builder: (context) => const Search(),
-        );
+        return MaterialPageRoute(builder: (context) => Search());
       case '/productview':
-        return MaterialPageRoute(
-          builder: (context) => const ProductView(),
-        );
+        if (args is ProductEntity) {
+          return MaterialPageRoute(
+              builder: (context) => ProductView(product: args));
+        }
+        return errorRoutes();
+
       case '/orderview':
         if (args is bool) {
           return MaterialPageRoute(

@@ -1,3 +1,5 @@
+// ignore_for_file: body_might_complete_normally_nullable
+
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,7 +9,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class FireBaseAuthDataSource {
   final FirebaseAuth _firebaseAuth;
-
   final GoogleSignIn _googleSignIn;
   final FirebaseFirestore _firestore;
 
@@ -42,7 +43,7 @@ class FireBaseAuthDataSource {
       }
       return userCredential.user;
     } on FirebaseAuthException catch (e) {
-      FirebaseAuthExceptions.handleExceptions(e);
+      throw FirebaseExceptions.handleAuthExceptions(e);
     } catch (e) {
       log(e.toString());
     }
@@ -56,7 +57,7 @@ class FireBaseAuthDataSource {
 
       return userCredential.user;
     } on FirebaseAuthException catch (e) {
-      FirebaseAuthExceptions.handleExceptions(e);
+      throw FirebaseExceptions.handleAuthExceptions(e);
     } catch (e) {
       log('Error during sign-in: $e');
       throw Exception('An error occurred during sign-in.');
@@ -67,8 +68,8 @@ class FireBaseAuthDataSource {
   Future<User?> signUpWithEmail(
       String email, String password, String name) async {
     try {
-      final UserCredential userCredential = await _firebaseAuth
-          .createUserWithEmailAndPassword(email: email, password: password);
+      var userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
+          email: email, password: password);
       final user = userCredential.user;
       if (user != null) {
         await _firestore.collection('user').doc(user.uid).set({
@@ -79,7 +80,7 @@ class FireBaseAuthDataSource {
       }
       return user;
     } on FirebaseAuthException catch (e) {
-      FirebaseAuthExceptions.handleExceptions(e);
+      throw FirebaseExceptions.handleAuthExceptions(e);
     } catch (e) {
       log(e.toString());
     }
@@ -94,8 +95,20 @@ class FireBaseAuthDataSource {
 
   //--------------current user---------------
   Future<User?> currentUser() async {
-    final user = await _firebaseAuth.currentUser;
+    final user = _firebaseAuth.currentUser;
     return user;
+  }
+
+  //---------------forgot password------------
+  Future<void> resetPassword(String email) async {
+    try {
+      await _firebaseAuth.sendPasswordResetEmail(email: email);
+      log('auth completed');
+    } on FirebaseAuthException catch (e) {
+      throw FirebaseExceptions.handleAuthExceptions(e);
+    } catch (e) {
+      log(e.toString());
+    }
   }
 
   // Sign out

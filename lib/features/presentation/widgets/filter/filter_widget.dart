@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:fork_and_fusion/core/shared/constants.dart';
-import 'package:fork_and_fusion/features/presentation/widgets/category_bottom_sheet.dart';
+import 'package:fork_and_fusion/features/presentation/widgets/filter/category_listview_bottomSheet.dart';
+import 'package:fork_and_fusion/features/presentation/widgets/filter/other/filter_variables.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/textbutton.dart';
 
 class FilterWidget extends StatelessWidget {
-  bool category;
-  FilterWidget({super.key, this.category = false});
-  RangeValues rangeValues = const RangeValues(20, 1200);
-  var gap = const SizedBox(
-    height: 10,
-  );
+  FilterVariables varible;
+
+  FilterWidget({super.key, required this.varible});
+
+  var gap = const SizedBox(height: 10);
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -26,14 +26,14 @@ class FilterWidget extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               _buildCategory(context),
-              Visibility(visible: category, child: gap),
+              gap,
               _buildSlider(setState),
               gap,
               _buildSort(),
               gap,
               SizedBox(
                 width: double.infinity,
-                child: CustomeTextButton(
+                child: CustomTextButton(
                   text: 'Apply',
                   onPressed: () {
                     Navigator.of(context).pop();
@@ -47,22 +47,17 @@ class FilterWidget extends StatelessWidget {
     );
   }
 
-  Visibility _buildCategory(BuildContext context) {
-    return Visibility(
-      visible: category,
-      child: Material(
-        borderRadius: Constants.radius,
-        elevation: 10,
-        child: InkWell(
-          onTap: () {
-            categoryBottomSheet(context);
-          },
-          child: Container(
-            padding: const EdgeInsets.all(10),
-            child: const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [Text('Category'), Text('view all')],
-            ),
+  Material _buildCategory(BuildContext context) {
+    return Material(
+      borderRadius: Constants.radius,
+      elevation: 10,
+      child: InkWell(
+        onTap: () => showCategoryListViewBottomSheet(varible.cubit, context),
+        child: Container(
+          padding: Constants.padding10,
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [Text('Category'), Text('view all')],
           ),
         ),
       ),
@@ -141,12 +136,12 @@ class FilterWidget extends StatelessWidget {
               min: 0,
               max: 10000,
               divisions: 500,
-              labels: RangeLabels(
-                  '${rangeValues.start.toInt()}', '${rangeValues.end.toInt()}'),
-              values: rangeValues,
+              labels: RangeLabels('${varible.rangeValues.start.toInt()}',
+                  '${varible.rangeValues.end.toInt()}'),
+              values: varible.rangeValues,
               onChanged: (value) {
                 setState(
-                  () => rangeValues = value,
+                  () => varible.rangeValues = value,
                 );
               },
             ),
@@ -160,7 +155,7 @@ class FilterWidget extends StatelessWidget {
                       alignment: Alignment.center,
                       padding: const EdgeInsets.all(10),
                       child: Text(
-                        rangeValues.start.toInt().toString(),
+                        varible.rangeValues.start.toInt().toString(),
                       ),
                     ),
                   ),
@@ -173,9 +168,7 @@ class FilterWidget extends StatelessWidget {
                     child: Container(
                       alignment: Alignment.center,
                       padding: const EdgeInsets.all(10),
-                      child: Text(
-                        rangeValues.end.toInt().toString(),
-                      ),
+                      child: Text(varible.rangeValues.end.toInt().toString()),
                     ),
                   ),
                 ),

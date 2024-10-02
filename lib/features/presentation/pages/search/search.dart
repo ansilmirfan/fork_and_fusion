@@ -1,74 +1,127 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fork_and_fusion/core/shared/constants.dart';
+import 'package:fork_and_fusion/core/utils/debouncer.dart';
+import 'package:fork_and_fusion/features/domain/entity/product.dart';
+import 'package:fork_and_fusion/features/presentation/bloc/product/product_bloc.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/custome_textform_field.dart';
-import 'package:fork_and_fusion/features/presentation/widgets/filter_bottom_sheet.dart';
-import 'package:fork_and_fusion/features/presentation/widgets/prodct_listtile.dart';
+import 'package:fork_and_fusion/features/presentation/widgets/filter/filter_bottom_sheet.dart';
+import 'package:fork_and_fusion/features/presentation/widgets/filter/other/filter_variables.dart';
+import 'package:fork_and_fusion/features/presentation/widgets/product_listtile/prodct_listtile.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/square_icon_button.dart';
 
 class Search extends StatelessWidget {
-  const Search({super.key});
-
+  Search({super.key});
+  bool visible = true;
+  FilterVariables varibles = FilterVariables();
+  final ProductBloc bloc = ProductBloc();
+  Debouncer debeoucer = Debouncer(milliseconds: 300);
+  TextEditingController searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    TextEditingController searchController = TextEditingController();
+    varibles.cubit.loadAllCategories();
+    bloc.add(FeatchAllProducts());
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(title: const Text('Search')),
         body: Column(
           children: [
-            _buildTextFielAndFilter(searchController, context),
-            Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.all(10),
-                itemCount: 10,
-                itemBuilder: (context, index) => ProductListTile(
-              
-                ),
-              ),
-            ),
+            _buildSearchFieldAndFilter(context),
+            _buildListView(),
           ],
         ),
       ),
     );
   }
 
-  Container _buildTextFielAndFilter(
-      TextEditingController searchController, BuildContext context) {
+  BlocBuilder _buildListView() {
+    return BlocBuilder<ProductBloc, ProductState>(
+      bloc: bloc,
+      builder: (context, state) {
+        if (state is ProductLoadingState) {
+          return const Expanded(
+              child: Center(child: CircularProgressIndicator()));
+        } else if (state is ProductCompletedState) {
+          return _listView(state.data);
+        } else if (state is ProductErrorState) {
+          return _centerText(state.message);
+        }
+        return Constants.none;
+      },
+    );
+  }
+
+  Expanded _listView(List<ProductEntity> data) {
+    if (data.isEmpty) {
+      return _centerText(
+          "No matching results found. Please try a different search term.");
+    }
+    return Expanded(
+      child: RefreshIndicator(
+        onRefresh: () async {
+          bloc.add(FeatchAllProducts());
+          searchController.clear();
+        },
+        child: ListView.builder(
+          padding: const EdgeInsets.all(10),
+          itemCount: data.length,
+          itemBuilder: (context, index) =>
+              ProductListTile(product: data[index]),
+        ),
+      ),
+    );
+  }
+
+  Expanded _centerText(String message) {
+    return Expanded(
+        child: Center(child: Text(message, textAlign: TextAlign.center)));
+  }
+
+  Container _buildSearchFieldAndFilter(BuildContext context) {
     return Container(
       padding: Constants.padding10,
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: CustomeTextField(
-                  hintText: 'Search...',
-                  controller: searchController,
-                  prefixIcon: const Icon(Icons.search),
-                  search: true,
-                  suffixIcon: true,
-                ),
-              ),
-              const SizedBox(
-                width: 5,
-              ),
-              SquareIconButton(
-                icon: Icons.filter_list_rounded,
-                onTap: () {
-                  filterBottomSheet(context, true);
+      child: StatefulBuilder(
+        builder: (context, setState) => Row(
+          children: [
+            Expanded(
+              child: CustomTextField(
+                onChanged: (querry) {
+                  setState(() => visible = querry.isEmpty);
+                  debeoucer.run(
+                    () {
+                      if (querry.isEmpty) {
+                        bloc.add(FeatchAllProducts());
+                      } else {
+                        bloc.add(SearchProductEvent(querry.toLowerCase()));
+                      }
+                    },
+                  );
                 },
-              )
-            ],
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          const Align(
-            alignment: Alignment.bottomLeft,
-            child: Text('20 Results found'),
-          )
-        ],
+                action: () {
+                  searchController.clear();
+                  bloc.add(FeatchAllProducts());
+                },
+                width: 1,
+                hintText: 'Search...',
+                controller: searchController,
+                prefixIcon: const Icon(Icons.search),
+                search: true,
+              ),
+            ),
+            Visibility(
+              visible: visible,
+              child: const SizedBox(width: 5),
+            ),
+            Visibility(
+              visible: visible,
+         
+              child: SquareIconButton(
+                  icon: Icons.filter_list_rounded,
+                  onTap: () => filterBottomSheet(context, varibles)),
+            )
+          ],
+        ),
       ),
     );
   }

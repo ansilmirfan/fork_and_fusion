@@ -1,4 +1,4 @@
-import 'package:fork_and_fusion/features/data/data_source/firebase_authentication.dart';
+import 'package:fork_and_fusion/features/data/data_source/firebase/firebase_authentication.dart';
 import 'package:fork_and_fusion/features/data/model/user_model.dart';
 import 'package:fork_and_fusion/features/domain/entity/user_entity.dart';
 import 'package:fork_and_fusion/features/domain/repository/auth_repository.dart';
@@ -51,5 +51,10 @@ class FirebaseAuthRepository implements AuthRepository {
       return UserModel.fromFireBaseUser(user);
     }
     return null;
+  }
+
+  @override
+  Future<void> resetPassword(String email) async {
+    await dataSource.resetPassword(email);
   }
 }

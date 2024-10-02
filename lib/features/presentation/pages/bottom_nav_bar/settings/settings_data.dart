@@ -7,7 +7,7 @@ class SettingsData {
     Icons.favorite_border,
     Icons.phone,
     Icons.info_outline,
-    Icons.logout,
+   
   ];
   static List<String> title = [
     'Privacy Policy',
@@ -15,7 +15,7 @@ class SettingsData {
     'Favorites',
     'Contact Us',
     'About App',
-    'Logout'
+   
   ];
   static List<void Function()?> onTap = [
     () {},
@@ -23,6 +23,6 @@ class SettingsData {
     () {},
     () {},
     () {},
-    () {},
+   
   ];
 }

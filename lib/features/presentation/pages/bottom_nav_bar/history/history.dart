@@ -17,7 +17,7 @@ class History extends StatelessWidget {
         body: NestedScrollView(
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return [
-              CustomAppbar( bottom: _buildTabBar(context)),
+              CustomAppbar(bottom: _buildTabBar(context)),
             ];
           },
           body: const TabBarView(
