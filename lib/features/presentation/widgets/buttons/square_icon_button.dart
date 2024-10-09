@@ -5,11 +5,13 @@ class SquareIconButton extends StatelessWidget {
   IconData icon;
   double height;
   bool white;
+  bool loading;
   void Function()? onTap;
   SquareIconButton({
     super.key,
     required this.icon,
     this.height = 25,
+    this.loading = false,
     this.onTap,
     this.white = true,
   });
@@ -31,12 +33,16 @@ class SquareIconButton extends StatelessWidget {
         onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Icon(
-            icon,
-            size: height,
-            color:
-                white ? Colors.black : Theme.of(context).colorScheme.tertiary,
-          ),
+          child: loading
+              ? CircularProgressIndicator(
+                  color: Theme.of(context).colorScheme.tertiary)
+              : Icon(
+                  icon,
+                  size: height,
+                  color: white
+                      ? Colors.black
+                      : Theme.of(context).colorScheme.tertiary,
+                ),
         ),
       ),
     );

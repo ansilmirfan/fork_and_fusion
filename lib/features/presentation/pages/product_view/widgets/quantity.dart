@@ -2,52 +2,49 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fork_and_fusion/core/shared/constants.dart';
 import 'package:fork_and_fusion/features/presentation/pages/product_view/bloc/quantity_bloc/quantity_bloc.dart';
-import 'package:fork_and_fusion/features/presentation/widgets/square_icon_button.dart';
+import 'package:fork_and_fusion/features/presentation/widgets/buttons/square_icon_button.dart';
+import 'package:fork_and_fusion/features/presentation/widgets/elevated_container.dart';
 
 class Quantity extends StatelessWidget {
-  const Quantity({super.key});
+  QuantityBloc bloc;
+  Quantity({super.key, required this.bloc});
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<QuantityBloc, QuantityState>(
+      bloc: bloc,
       builder: (context, state) {
         if (state is QuantityInitialState) {
           return Row(
+            mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              SquareIconButton(
-                white: false,
-                icon: Icons.remove,
-                onTap: () {
-                  context.read<QuantityBloc>().add(QuantityReduceEvent());
-                },
-              ),
-              Material(
-                borderRadius: Constants.radius,
-                color: Theme.of(context).colorScheme.tertiary,
-                elevation: 10,
+              _squareButton(false, () => bloc.add(QuantityReduceEvent())),
+              ElevatedContainer(
                 child: Container(
                   height: 40,
                   width: 40,
-                  padding: const EdgeInsets.all(10),
+                  padding: Constants.padding10,
                   child: Text(
                     state.quantity.toString(),
                     textAlign: TextAlign.center,
                   ),
                 ),
               ),
-              SquareIconButton(
-                white: false,
-                icon: Icons.add,
-                onTap: () {
-                  context.read<QuantityBloc>().add(QuantityAddEvent());
-                },
-              ),
+              _squareButton(true, () => bloc.add(QuantityAddEvent()))
             ],
           );
         }
         return Constants.none;
       },
+    );
+  }
+
+  SquareIconButton _squareButton(bool add, void Function()? onTap) {
+    return SquareIconButton(
+      white: false,
+      icon: add ? Icons.add : Icons.remove,
+      onTap: onTap,
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:fork_and_fusion/features/data/repositories/category_repository.dart';
@@ -25,6 +26,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
       data.sort((a, b) => a.name.compareTo(b.name));
       emit(CategoryCompletedState(data));
     } catch (e) {
+      log('error loading category:${e.toString()}');
       emit(CategoryErrorState('Network error please try again'));
     }
   }

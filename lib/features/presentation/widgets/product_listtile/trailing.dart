@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fork_and_fusion/core/shared/constants.dart';
-import 'package:fork_and_fusion/features/presentation/bloc/cart_quantity/cart_quantity_bloc.dart';
+import 'package:fork_and_fusion/features/domain/entity/cart_entity.dart';
+import 'package:fork_and_fusion/features/domain/entity/product.dart';
+import 'package:fork_and_fusion/features/presentation/bloc/cart_managemnt/cart_management_bloc.dart';
 import 'package:fork_and_fusion/features/presentation/pages/order_view/widgets/rating_dialog.dart';
-import 'package:fork_and_fusion/features/presentation/pages/search/bouncing_heart.dart';
-import 'package:fork_and_fusion/features/presentation/widgets/square_icon_button.dart';
+import 'package:fork_and_fusion/features/presentation/widgets/add_to_cart_bottomsheet.dart';
+
+import 'package:fork_and_fusion/features/presentation/widgets/bouncing_heart.dart';
+import 'package:fork_and_fusion/features/presentation/widgets/buttons/square_icon_button.dart';
 
 class Trailing {
- static Expanded historyViewTrailing(BuildContext context) {
+  static Expanded historyViewTrailing(BuildContext context) {
     return Expanded(
         child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -26,64 +30,65 @@ class Trailing {
     ));
   }
 
- static Expanded cartViewTrailing(CartQuantityBloc bloc) {
+  static Expanded cartViewTrailing(BuildContext context, CartEntity cart) {
     return Expanded(
-        child: BlocBuilder<CartQuantityBloc, CartQuantityState>(
-      bloc: bloc,
-      builder: (context, state) {
-        if (state is CartQuantityInitialState) {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SquareIconButton(
-                icon: Icons.add,
-                white: false,
-                onTap: () => bloc.add(CartQuantityAddEvent()),
-              ),
-              Material(
-                borderRadius: Constants.radius,
-                elevation: 10,
-                color: Theme.of(context).colorScheme.tertiary,
-                child: Container(
-                  width: 40,
-                  padding: Constants.padding10,
-                  child: Text(
-                    state.quantity.toString(),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
-              SquareIconButton(
-                icon: Icons.remove,
-                white: false,
-                onTap: () => bloc.add(CartQuantityReduceEvent()),
-              ),
-            ],
-          );
-        }
-        return Constants.none;
-      },
+        child: Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        _squareButton(
+          true,
+          () => context
+              .read<CartManagementBloc>()
+              .add(CartManagementUpdateQuantityEvent(true, cart)),
+        ),
+        Material(
+          borderRadius: Constants.radius,
+          elevation: 10,
+          color: Theme.of(context).colorScheme.tertiary,
+          child: Container(
+            width: 40,
+            padding: Constants.padding10,
+            child: Text(
+              cart.quantity.toString(),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+        _squareButton(
+          false,
+          () => context
+              .read<CartManagementBloc>()
+              .add(CartManagementUpdateQuantityEvent(false, cart)),
+        ),
+      ],
     ));
   }
 
-static  Expanded productViewTrailing() {
+  static Expanded productViewTrailing(
+      BuildContext context, ProductEntity product) {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.only(bottom: 5),
         child: Column(
           children: [
-           BouncingHeartButton(),
+            const BouncingHeartButton(),
             Expanded(
-              child: SquareIconButton(
-                icon: Icons.add,
-                height: 15,
-                white: false,
-                onTap: () {},
-              ),
+              child: _squareButton(
+                  true, () => showAddToCartBottomSheet(context, product), 15),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  static SquareIconButton _squareButton(bool addButton, void Function()? onTap,
+      [double height = 25]) {
+    return SquareIconButton(
+      icon: addButton ? Icons.add : Icons.remove,
+      white: false,
+      onTap: onTap,
+      height: height,
     );
   }
 }

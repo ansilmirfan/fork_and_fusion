@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fork_and_fusion/features/presentation/pages/intro_pages/onboard/bloc/page_bloc.dart';
-import 'package:fork_and_fusion/features/presentation/widgets/square_icon_button.dart';
-import 'package:fork_and_fusion/features/presentation/widgets/textbutton.dart';
+import 'package:fork_and_fusion/features/presentation/widgets/buttons/square_icon_button.dart';
+import 'package:fork_and_fusion/features/presentation/widgets/buttons/textbutton.dart';
 
 class CustomePage extends StatelessWidget {
   String bgImage;

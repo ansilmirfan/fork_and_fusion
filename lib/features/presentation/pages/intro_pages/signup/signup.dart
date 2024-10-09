@@ -9,7 +9,7 @@ import 'package:fork_and_fusion/features/presentation/pages/intro_pages/sign_in/
 import 'package:fork_and_fusion/features/presentation/widgets/custome_textform_field.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/logo.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/snackbar.dart';
-import 'package:fork_and_fusion/features/presentation/widgets/textbutton.dart';
+import 'package:fork_and_fusion/features/presentation/widgets/buttons/textbutton.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});

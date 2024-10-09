@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:fork_and_fusion/features/domain/entity/category.dart';
 import 'package:fork_and_fusion/features/domain/entity/product.dart';
 
@@ -29,22 +27,36 @@ class Utils {
     return data.map((e) => Utils.capitalizeEachWord(e.name)).toList();
   }
 
-  static int extractPrice(ProductEntity data) {
-    if (data.price != 0) {
-      return data.price as int;
+  static int extractPrice(ProductEntity product) {
+    int price;
+    if (product.price != 0) {
+      price = product.price as int;
+    } else {
+      price = product.variants.values
+          .map((e) => e is String ? int.parse(e) : e)
+          .toList()
+          .reduce((a, b) => a < b ? a : b);
     }
 
-    var price = data.variants.values
-        .map((e) => e is String ? int.parse(e) : e)
-        .toList()
-        .reduce((a, b) => a < b ? a : b);
-    return price as int;
+    return price;
   }
 
   static calculateRating(List<int> nums) {
     if (nums.isEmpty) {
       return 0;
     }
-    return (nums.reduce((a, b) => a + b))~/nums.length;
+    return (nums.reduce((a, b) => a + b)) ~/ nums.length;
+  }
+
+  static int calculateOffer(ProductEntity product,
+      [String selectedVariant = '']) {
+    int price = 1;
+    if (selectedVariant.isNotEmpty&&product.variants.isNotEmpty) {
+      price = product.variants[selectedVariant] ?? 0;
+    } else {
+      price = extractPrice(product);
+    }
+
+    return price - (price * product.offer ~/ 100);
   }
 }

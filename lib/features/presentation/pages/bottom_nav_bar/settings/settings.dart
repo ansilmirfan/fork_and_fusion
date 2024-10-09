@@ -5,12 +5,14 @@ import 'package:fork_and_fusion/features/domain/usecase/Auth%20usecase/signout_u
 import 'package:fork_and_fusion/features/presentation/pages/bottom_nav_bar/settings/settings_data.dart';
 import 'package:fork_and_fusion/features/presentation/pages/bottom_nav_bar/settings/widgets/settings_listtile.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/custom_alert_dialog.dart';
+import 'package:fork_and_fusion/features/presentation/widgets/overlay_loading.dart';
 
 class Settings extends StatelessWidget {
   const Settings({super.key});
 
   @override
   Widget build(BuildContext context) {
+    hideLoadingOverlay();
     var email = Constants.user?.email;
     var image = Constants.user?.image;
     var gap = const SizedBox(height: 10);

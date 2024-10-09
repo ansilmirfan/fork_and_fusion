@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:fork_and_fusion/core/shared/constants.dart';
 import 'package:fork_and_fusion/core/utils/utils.dart';
-
+import 'package:fork_and_fusion/features/presentation/widgets/elevated_container.dart';
 
 class CustomTextField extends StatefulWidget {
   final String hintText;
@@ -50,10 +50,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
       builder: (context, constraints) {
         return Stack(
           children: [
-            Material(
-              elevation: 10,
-              borderRadius: Constants.radius,
-              color: Theme.of(context).colorScheme.tertiary,
+            ElevatedContainer(
+              padding: 0.0,
               child: SizedBox(
                 width: constraints.maxWidth * widget.width,
                 child: TextFormField(

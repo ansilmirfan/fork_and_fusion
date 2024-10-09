@@ -9,6 +9,7 @@ import 'package:fork_and_fusion/features/presentation/pages/bottom_nav_bar/home/
 import 'package:fork_and_fusion/features/presentation/pages/bottom_nav_bar/home/widgets/custome_item_card.dart';
 import 'package:fork_and_fusion/features/presentation/pages/bottom_nav_bar/home/widgets/scanner_icon.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/custome_appbar.dart';
+import 'package:fork_and_fusion/features/presentation/widgets/overlay_loading.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/product_listtile/prodct_listtile.dart';
 
 class Home extends StatelessWidget {
@@ -16,6 +17,7 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    hideLoadingOverlay();
     var gap = const SizedBox(height: 10);
     context.read<SelectedCategoryCubit>();
     context.read<ProductBloc>();
@@ -37,39 +39,34 @@ class Home extends StatelessWidget {
     );
   }
 
-  Padding _buildBody(
+  RefreshIndicator _buildBody(
       SizedBox gap, BuildContext context, List<ProductEntity> data) {
-   
-  
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: RefreshIndicator(
-        onRefresh: () async {
-          context.read<ProductBloc>().add(FeatchAllProducts());
-        },
-        child: CustomScrollView(
-          slivers: [
-            CustomAppbar(scanner: true),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Column(
-                  children: [
-                    Carousal(data: data),
-                    gap,
-                    _specialOfferCard(data),
-                    gap,
-                    _seasonalFoodsCard(data),
-                    gap,
-                    CategoryScrollView(),
-                    gap,
-                  ],
-                ),
+    return RefreshIndicator(
+      onRefresh: () async {
+        context.read<ProductBloc>().add(FeatchAllProducts());
+      },
+      child: CustomScrollView(
+        slivers: [
+          CustomAppbar(scanner: true),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: Column(
+                children: [
+                  Carousal(data: data),
+                  gap,
+                  _specialOfferCard(data),
+                  gap,
+                  _seasonalFoodsCard(data),
+                  gap,
+                  CategoryScrollView(),
+                  gap,
+                ],
               ),
             ),
-            _buildListView(data),
-          ],
-        ),
+          ),
+          _buildListView(data),
+        ],
       ),
     );
   }

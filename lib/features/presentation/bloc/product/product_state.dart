@@ -16,3 +16,4 @@ final class ProductErrorState extends ProductState {
   String message;
   ProductErrorState(this.message);
 }
+final class ProductNoDataOnFilterState extends ProductState{}

@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:fork_and_fusion/core/shared/constants.dart';
 import 'package:fork_and_fusion/core/utils/utils.dart';
 import 'package:fork_and_fusion/features/domain/entity/product.dart';
+import 'package:fork_and_fusion/features/presentation/widgets/add_to_cart_bottomsheet.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/cache_image.dart';
-import 'package:fork_and_fusion/features/presentation/widgets/square_icon_button.dart';
+import 'package:fork_and_fusion/features/presentation/widgets/buttons/square_icon_button.dart';
 
 class CustomItemCard extends StatelessWidget {
   bool offer;
@@ -31,12 +32,9 @@ class CustomItemCard extends StatelessWidget {
           children: [
             Text(title),
             Expanded(
-              child: SizedBox(
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  //----------------products------------------
-                  child: _products(context),
-                ),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: _productCard(context),
               ),
             ),
           ],
@@ -45,7 +43,7 @@ class CustomItemCard extends StatelessWidget {
     );
   }
 
-  Row _products(BuildContext context) {
+  Row _productCard(BuildContext context) {
     return Row(
       children: List.generate(
         data.length,
@@ -68,7 +66,7 @@ class CustomItemCard extends StatelessWidget {
                   ),
                 ),
                 _onTap(context, index),
-                _addToCartButton()
+                _addToCartButton(context, index)
               ],
             ),
           ),
@@ -77,7 +75,7 @@ class CustomItemCard extends StatelessWidget {
     );
   }
 
-  Positioned _addToCartButton() {
+  Positioned _addToCartButton(BuildContext context, int index) {
     return Positioned(
       right: 5,
       top: 5,
@@ -85,7 +83,9 @@ class CustomItemCard extends StatelessWidget {
         height: 20,
         icon: Icons.add,
         white: false,
-        onTap: () {},
+        onTap: () {
+          showAddToCartBottomSheet(context, data[index]);
+        },
       ),
     );
   }
@@ -137,7 +137,7 @@ class CustomItemCard extends StatelessWidget {
 
                 //---------------------reducing the offer percentage from the actual price-----------------
                 Text(
-                  "₹${Utils.extractPrice(data[index]) - (data[index].offer) ~/ 100}",
+                  "₹${Utils.calculateOffer(data[index])}",
                   style: Theme.of(context)
                       .textTheme
                       .bodyMedium

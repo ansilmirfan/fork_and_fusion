@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fork_and_fusion/core/shared/constants.dart';
 import 'package:fork_and_fusion/features/presentation/pages/bottom_nav_bar/history/widgets/rich_label_text.dart';
-import 'package:fork_and_fusion/features/presentation/widgets/textbutton.dart';
+import 'package:fork_and_fusion/features/presentation/widgets/buttons/textbutton.dart';
 
 class HistoryListTile extends StatelessWidget {
   int index;

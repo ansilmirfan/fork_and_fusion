@@ -117,7 +117,7 @@ class Carousal extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         Text(Utils.capitalizeEachWord(data[index].name)),
-        Text("₹ ${Utils.extractPrice(data[index])}")
+        Text("₹ ${Utils.calculateOffer(data[index])}")
       ],
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fork_and_fusion/core/shared/constants.dart';
+
+import 'package:fork_and_fusion/features/presentation/widgets/elevated_container.dart';
 
 class Ingrediants extends StatelessWidget {
   String ingrediants;
@@ -8,13 +9,9 @@ class Ingrediants extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.white,
-      borderRadius: Constants.radius,
-      elevation: 10,
-      child: Container(
-        width: double.infinity,
-        padding: Constants.padding10,
+    return ElevatedContainer(
+      padding: 10.0,
+      child: SizedBox(
         child: Column(
           children: [
             Text('Ingrediants',

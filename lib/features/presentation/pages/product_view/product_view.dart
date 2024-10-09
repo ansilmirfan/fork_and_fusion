@@ -2,181 +2,171 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fork_and_fusion/core/shared/constants.dart';
 import 'package:fork_and_fusion/core/utils/utils.dart';
+import 'package:fork_and_fusion/features/domain/entity/cart_entity.dart';
 import 'package:fork_and_fusion/features/domain/entity/product.dart';
+import 'package:fork_and_fusion/features/presentation/bloc/cart_managemnt/cart_management_bloc.dart';
+import 'package:fork_and_fusion/features/presentation/cubit/selected_variant/selected_variant_cubit.dart';
 import 'package:fork_and_fusion/features/presentation/pages/product_view/bloc/quantity_bloc/quantity_bloc.dart';
+import 'package:fork_and_fusion/features/presentation/pages/product_view/widgets/cooking_request_field.dart';
+import 'package:fork_and_fusion/features/presentation/pages/product_view/widgets/image_carousal.dart';
 import 'package:fork_and_fusion/features/presentation/pages/product_view/widgets/ingrediants.dart';
+import 'package:fork_and_fusion/features/presentation/pages/product_view/widgets/parcel_choice_chip.dart';
 import 'package:fork_and_fusion/features/presentation/pages/product_view/widgets/quantity.dart';
 import 'package:fork_and_fusion/features/presentation/pages/product_view/widgets/rating.dart';
-import 'package:fork_and_fusion/features/presentation/pages/product_view/widgets/variants.dart';
-import 'package:fork_and_fusion/features/presentation/widgets/cache_image.dart';
-import 'package:fork_and_fusion/features/presentation/widgets/custome_textform_field.dart';
-import 'package:fork_and_fusion/features/presentation/widgets/textbutton.dart';
+import 'package:fork_and_fusion/features/presentation/pages/product_view/widgets/variant_selection_widget.dart';
+import 'package:fork_and_fusion/features/presentation/widgets/buttons/add_to_cart_button.dart';
+
 
 class ProductView extends StatelessWidget {
   ProductEntity product;
-  ProductView({super.key, required this.product});
+  bool fromCart;
+  CartEntity? cart;
+  ProductView(
+      {super.key, required this.product, this.fromCart = false, this.cart});
   List<bool> selectedVariant = [];
+  String selected = '';
+  TextEditingController controller = TextEditingController();
+  PageController pageController = PageController();
+  late final CartManagementBloc cartBloc = CartManagementBloc();
+  QuantityBloc quantityBloc = QuantityBloc();
+  var gap = const SizedBox(height: 10);
+  late SelectedVariantCubit variantCubit;
 
   @override
   Widget build(BuildContext context) {
+    variantCubit = context.read<SelectedVariantCubit>();
+    intialise(context);
+
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(backgroundColor: Colors.transparent),
+        body: Column(
+          children: [
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                  ImageCarousal(images: product.image),
+                  _buildbody(context),
+                ],
+              ),
+            ),
+            _addToCartButton(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void intialise(BuildContext context) {
     selectedVariant =
         List.generate(product.variants.length, (index) => index == 0);
-    var gap = const SizedBox(height: 10);
-    return BlocProvider(
-      create: (context) => QuantityBloc(),
-      child: GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
-        child: Scaffold(
-          body: Stack(
-            children: [
-              _buildProductImage(),
-              _buildDraggableSheet(context, gap),
-              _buildGoBackButton(context),
-            ],
+    if (fromCart) {
+      controller.text = cart?.cookingRequest ?? '';
+      var varinats = product.variants.entries.toList();
+      varinats.sort((a, b) => a.value.compareTo(b.value));
+      selectedVariant = List.generate(
+        varinats.length,
+        (index) => varinats[index].key == cart?.selectedType,
+      );
+      context
+          .read<SelectedVariantCubit>()
+          .onSelectionChanged(cart?.selectedType ?? '');
+
+      quantityBloc.add(
+          QuantityInitialEvent(cart?.quantity ?? 1, cart?.parcel ?? false));
+    }
+    context.read<SelectedVariantCubit>();
+    cartBloc.add(CartManagementCheckForDuplicate(
+        parcel: false,
+        productId: product.id,
+        selectedVarinat: getSelectedVariant()));
+  }
+
+  AddToCartButton _addToCartButton() {
+    return AddToCartButton(
+      cartBloc: cartBloc,
+      quantityBloc: quantityBloc,
+      product: product,
+      fromCart: fromCart,
+      cartEntity: cart,
+      getSelectedVariant: getSelectedVariant,
+      cookingRequest: getCookingRequest,
+      resetField: resetFields,
+    );
+  }
+
+
+
+  Widget _buildbody(BuildContext context) {
+    return Padding(
+      padding: Constants.padding10,
+      child: Column(
+        children: [
+          _buildDishNameAndPrice(context),
+          gap,
+          Ingrediants(
+            gap: gap,
+            ingrediants: product.ingredients,
           ),
-        ),
+          gap,
+          //----------rating--------------
+          Rating(rating: Utils.calculateRating(product.rating)),
+          gap,
+          CookingRequestField(controller: controller),
+          gap,
+          VariantSelectionWidget(
+            product: product,
+            selectedVariant: selectedVariant,
+            parcel: quantityBloc.parcelStatus,
+            cartBloc: cartBloc,
+          ),
+          gap,
+          _buildQuantityAndParcelSection(),
+        ],
       ),
     );
   }
 
-  SafeArea _buildGoBackButton(BuildContext context) {
-    return SafeArea(
-      child: IconButton(
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
-        icon: Icon(
-          Icons.arrow_back,
-          color: Theme.of(context).colorScheme.tertiary,
-        ),
-      ),
-    );
+//----------for selected variant-----------------------
+//-------if price is 0 then no varint,so returns empty string
+//-------if there is variant it finds the index of selected variant from 'selectedVariant'
+//--------then returns the corresponding element of key at product.variants
+  String getSelectedVariant() {
+    var entries = product.variants.entries.toList();
+
+    entries.sort((a, b) => a.value.compareTo(b.value));
+    if (product.price == 0) {
+      variantCubit.onSelectionChanged(entries.first.key);
+    }
+
+    int index = selectedVariant.indexWhere((element) => element);
+    String variant =
+        product.price != 0 ? '' : (index != -1 ? entries[index].key : '');
+    return variant;
   }
 
-//--------------images--------------
-  SizedBox _buildProductImage() {
-    return SizedBox(
-      height: Constants.dHeight * 2 / 5,
-      child: CarouselView(
-        itemExtent: double.infinity,
-        children: List.generate(
-          product.image.length,
-          (index) => Hero(
-            tag: product.id + index.toString(),
-            child: CacheImage(
-              url: product.image[index],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDraggableSheet(BuildContext context, SizedBox gap) {
-    TextEditingController controller = TextEditingController();
-
-    return DraggableScrollableSheet(
-      initialChildSize: 0.66,
-      minChildSize: 0.66,
-      maxChildSize: 0.75,
-      builder: (context, scrollController) {
-        return Container(
-          padding: const EdgeInsets.all(20),
-          decoration: const BoxDecoration(
-            color: Color.fromARGB(255, 240, 239, 239),
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(30),
-              topRight: Radius.circular(30),
-            ),
-          ),
-          child: ListView(
-            controller: scrollController,
-            padding: EdgeInsets.zero,
-            children: [
-              _buildDishNameAndPrice(context),
-              gap,
-              Ingrediants(
-                gap: gap,
-                ingrediants: product.ingredients,
-              ),
-              gap,
-              //----------rating--------------
-              Rating(rating: Utils.calculateRating(product.rating)),
-              gap,
-              _buildCookingRequestSection(context, gap, controller),
-              gap,
-              Variants(
-                variants: product.variants,
-                selectedVariant: selectedVariant,
-              ),
-              gap,
-              _buildQuantityAndParcelSection(),
-              gap,
-              _buildAddToCartButton(),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  CustomTextButton _buildAddToCartButton() {
-    return CustomTextButton(
-      text: 'Add to Cart',
-      icon: const Icon(Icons.shopping_cart),
-      onPressed: () {},
-    );
+//-------------callback for getting thecooking request----
+  String getCookingRequest() => controller.text.trim();
+  //------------callback for resetting the field------------
+  void resetFields() {
+    controller.clear();
+    quantityBloc.add(QuantityResetEvent());
   }
 
   Row _buildQuantityAndParcelSection() {
     return Row(
       children: [
-        const Expanded(child: Quantity()),
-        _parcelChoiceChip(),
-      ],
-    );
-  }
-
-  Expanded _parcelChoiceChip() {
-    return Expanded(
-      child: BlocBuilder<QuantityBloc, QuantityState>(
-        builder: (context, state) {
-          if (state is QuantityInitialState) {
-            return ChoiceChip(
-              label: const Text('Parcel'),
-              selected: state.parcel,
-              onSelected: (value) {
-                context.read<QuantityBloc>().add(ParcelEvent());
-              },
-            );
-          }
-          return Constants.none;
-        },
-      ),
-    );
-  }
-
-  Material _buildCookingRequestSection(
-      BuildContext context, SizedBox gap, TextEditingController controller) {
-    return Material(
-      elevation: 10,
-      borderRadius: Constants.radius,
-      color: Theme.of(context).colorScheme.tertiary,
-      child: Container(
-        width: double.infinity,
-        padding: Constants.padding10,
-        child: Column(
-          children: [
-            const Text('Add a cooking Request (optional)'),
-            gap,
-            CustomTextField(
-              hintText: "e.g. Don't make it too spicy",
-              multiLine: 2,
-              controller: controller,
-            )
-          ],
+        Expanded(child: Quantity(bloc: quantityBloc)),
+        ParcelChoicechip(
+          cartBloc: cartBloc,
+          getSelectedvarint: getSelectedVariant,
+          product: product,
+          quantityBloc: quantityBloc,
         ),
-      ),
+      ],
     );
   }
 
@@ -185,14 +175,27 @@ class ProductView extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          Utils.capitalizeEachWord(product.name),
-          style: Theme.of(context).textTheme.headlineSmall,
+        Expanded(
+          child: Text(
+            Utils.capitalizeEachWord(product.name),
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
         ),
-        Text(
-          '₹${Utils.extractPrice(product)}',
-          style: TextStyle(color: Theme.of(context).primaryColor),
-        ),
+        product.price == 0
+            ? BlocBuilder<SelectedVariantCubit, SelectedVariantState>(
+                builder: (context, state) {
+                  var selected =
+                      (state as SelectedVariantInitialState).selected;
+                  return Text(
+                    '₹${Utils.calculateOffer(product, selected)}',
+                    style: TextStyle(color: Theme.of(context).primaryColor),
+                  );
+                },
+              )
+            : Text(
+                '₹${Utils.calculateOffer(product)}',
+                style: TextStyle(color: Theme.of(context).primaryColor),
+              ),
       ],
     );
   }

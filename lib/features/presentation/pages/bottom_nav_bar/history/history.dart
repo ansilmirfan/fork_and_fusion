@@ -5,12 +5,14 @@ import 'package:fork_and_fusion/features/presentation/pages/bottom_nav_bar/histo
 import 'package:fork_and_fusion/features/presentation/pages/bottom_nav_bar/history/widgets/custom_tab.dart';
 import 'package:fork_and_fusion/features/presentation/pages/bottom_nav_bar/history/widgets/today.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/custome_appbar.dart';
+import 'package:fork_and_fusion/features/presentation/widgets/overlay_loading.dart';
 
 class History extends StatelessWidget {
   const History({super.key});
 
   @override
   Widget build(BuildContext context) {
+    hideLoadingOverlay();
     return DefaultTabController(
       length: 2,
       child: Scaffold(

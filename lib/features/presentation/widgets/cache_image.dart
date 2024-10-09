@@ -17,6 +17,7 @@ class CacheImage extends StatelessWidget {
       width: width,
       height: width,
       imageUrl: url,
+      cacheKey: url,
       progressIndicatorBuilder: (context, url, downloadProgress) => Center(
           child: CircularProgressIndicator(
         value: downloadProgress.progress,

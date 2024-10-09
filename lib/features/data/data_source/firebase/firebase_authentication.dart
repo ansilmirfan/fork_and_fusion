@@ -39,6 +39,11 @@ class FireBaseAuthDataSource {
             'name': user.displayName,
             'image url': user.photoURL,
           });
+          //--------creating cart--------
+          await _firestore
+              .collection('cart')
+              .doc(user.uid)
+              .set({'cart ids': []});
         }
       }
       return userCredential.user;
@@ -77,6 +82,11 @@ class FireBaseAuthDataSource {
           "email": email,
           'uid': user.uid,
         });
+        //--------creating cart--------
+          await _firestore
+              .collection('cart')
+              .doc(user.uid)
+              .set({'cart ids': []});
       }
       return user;
     } on FirebaseAuthException catch (e) {

@@ -32,6 +32,13 @@ class Routes {
         if (args is ProductEntity) {
           return MaterialPageRoute(
               builder: (context) => ProductView(product: args));
+        } else if (args is Map) {
+          return MaterialPageRoute(
+              builder: (context) => ProductView(
+                    product: args['product'] ,
+                    fromCart: args['from'] ?? false,
+                    cart: args['cart'],
+                  ));
         }
         return errorRoutes();
 

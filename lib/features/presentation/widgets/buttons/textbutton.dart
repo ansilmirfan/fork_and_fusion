@@ -27,7 +27,7 @@ class CustomTextButton extends StatelessWidget {
                 ? google
                     ? Colors.blue
                     : const Color(0xFFFF6B01)
-                : Colors.grey,
+                : Theme.of(context).colorScheme.secondary,
           ),
           shape: const WidgetStatePropertyAll(
             RoundedRectangleBorder(
@@ -62,7 +62,9 @@ class CustomTextButton extends StatelessWidget {
             ),
             const Spacer(),
             progress
-                ? const CircularProgressIndicator()
+                ? CircularProgressIndicator(
+                    color: Theme.of(context).colorScheme.tertiary,
+                  )
                 : Text(
                     text,
                     style: const TextStyle(fontSize: 20),

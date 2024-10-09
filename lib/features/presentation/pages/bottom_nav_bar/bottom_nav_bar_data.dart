@@ -26,7 +26,7 @@ class BottomNavBarData {
     ),
   ];
   static var pages = [
-    Home(),
+    const Home(),
     const Cart(),
     const History(),
     const Settings(),

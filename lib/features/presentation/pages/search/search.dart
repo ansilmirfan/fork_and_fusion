@@ -4,11 +4,12 @@ import 'package:fork_and_fusion/core/shared/constants.dart';
 import 'package:fork_and_fusion/core/utils/debouncer.dart';
 import 'package:fork_and_fusion/features/domain/entity/product.dart';
 import 'package:fork_and_fusion/features/presentation/bloc/product/product_bloc.dart';
+import 'package:fork_and_fusion/features/presentation/widgets/buttons/custom_eleavated_button.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/custome_textform_field.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/filter/filter_bottom_sheet.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/filter/other/filter_variables.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/product_listtile/prodct_listtile.dart';
-import 'package:fork_and_fusion/features/presentation/widgets/square_icon_button.dart';
+import 'package:fork_and_fusion/features/presentation/widgets/buttons/square_icon_button.dart';
 
 class Search extends StatelessWidget {
   Search({super.key});
@@ -46,9 +47,31 @@ class Search extends StatelessWidget {
           return _listView(state.data);
         } else if (state is ProductErrorState) {
           return _centerText(state.message);
+        } else if (state is ProductNoDataOnFilterState) {
+          return _refresh();
         }
         return Constants.none;
       },
+    );
+  }
+
+  Expanded _refresh() {
+    return Expanded(
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              "We couldn't find any matches. Try different filters or explore other options",
+              textAlign: TextAlign.center,
+            ),
+            CustomEleavatedButton(
+              text: 'Refresh',
+              onPressed: () => bloc.add(FeatchAllProducts()),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -67,7 +90,7 @@ class Search extends StatelessWidget {
           padding: const EdgeInsets.all(10),
           itemCount: data.length,
           itemBuilder: (context, index) =>
-              ProductListTile(product: data[index]),
+              ProductListTile(product: data[index], fromSearch: true),
         ),
       ),
     );
@@ -115,10 +138,9 @@ class Search extends StatelessWidget {
             ),
             Visibility(
               visible: visible,
-         
               child: SquareIconButton(
                   icon: Icons.filter_list_rounded,
-                  onTap: () => filterBottomSheet(context, varibles)),
+                  onTap: () => filterBottomSheet(context, varibles, bloc)),
             )
           ],
         ),
