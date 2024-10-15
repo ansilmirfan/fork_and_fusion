@@ -28,5 +28,12 @@ final class CartManagementGoToCartState extends CartManagementState {}
 
 final class CartManagementItemNotInCartState extends CartManagementState {}
 
+final class CartManagementEditedState extends CartManagementState {}
 
-final class CartManagementEditedState extends CartManagementState{}
+final class CartManagementPoceedsToBuyState extends CartManagementState {
+  String clientId;
+  String url;
+  String secretKey;
+  CartManagementPoceedsToBuyState(
+      {required this.clientId, required this.secretKey, required this.url});
+}

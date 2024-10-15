@@ -51,12 +51,36 @@ class Utils {
   static int calculateOffer(ProductEntity product,
       [String selectedVariant = '']) {
     int price = 1;
-    if (selectedVariant.isNotEmpty&&product.variants.isNotEmpty) {
+    if (selectedVariant.isNotEmpty && product.variants.isNotEmpty) {
       price = product.variants[selectedVariant] ?? 0;
     } else {
       price = extractPrice(product);
     }
 
     return price - (price * product.offer ~/ 100);
+  }
+
+  static String formatTime(DateTime date) {
+    var hour = date.hour;
+    var minuite = date.minute;
+    String period = hour >= 12 ? 'PM' : "AM";
+    hour = hour > 12
+        ? hour - 12
+        : hour == 0
+            ? 12
+            : hour;
+    String time =
+        ' ${hour < 10 ? '0$hour' : hour}:${minuite < 10 ? '0$minuite' : minuite} $period';
+
+    return time;
+  }
+
+  static String formatDate(DateTime date) {
+    var day = date.day;
+    var month = date.month;
+
+    String formatedDate =
+        '${day < 10 ? '0$day' : day}/${month < 10 ? '0$month' : month}/${date.year}';
+    return formatedDate;
   }
 }

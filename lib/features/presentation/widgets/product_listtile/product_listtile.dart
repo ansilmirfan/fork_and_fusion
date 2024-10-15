@@ -5,25 +5,31 @@ import 'package:fork_and_fusion/core/shared/constants.dart';
 import 'package:fork_and_fusion/features/domain/entity/cart_entity.dart';
 import 'package:fork_and_fusion/features/domain/entity/product.dart';
 import 'package:fork_and_fusion/features/presentation/bloc/cart_managemnt/cart_management_bloc.dart';
+import 'package:fork_and_fusion/features/presentation/bloc/favourite/favourite_bloc.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/cache_image.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/elevated_container.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/product_listtile/center_data.dart';
+import 'package:fork_and_fusion/features/presentation/widgets/product_listtile/custom_dismissible.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/product_listtile/trailing.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/buttons/textbutton.dart';
 
 class ProductListTile extends StatelessWidget {
   ListType type;
   bool parcel;
+  FavouriteBloc? favouriteBloc;
   ProductEntity? product;
   CartEntity? cart;
   bool fromSearch;
+  bool fromFavourite;
 
   ProductListTile(
       {super.key,
       this.product,
       this.type = ListType.productView,
       this.cart,
-      this.fromSearch=false,
+      this.favouriteBloc,
+      this.fromSearch = false,
+      this.fromFavourite = false,
       this.parcel = false});
 
   @override
@@ -32,24 +38,37 @@ class ProductListTile extends StatelessWidget {
     var height = Constants.dHeight;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5),
-      child: ElevatedContainer(
-        padding: 0.0,
-        child: InkWell(
-          onTap: () => _navigate(context),
-          child: Container(
-            height: type == ListType.historyViewToday
-                ? height * 0.25
-                : height * 0.18,
-            padding: const EdgeInsets.all(5),
-            child: type == ListType.historyViewToday
-                ? _historyViewToday(height, context)
-                : Row(
-                    children: [
-                      _buildImage(height, context),
-                      _buildProductDetails(type, context),
-                      _buildTrailing(type, context),
-                    ],
-                  ),
+      child: type == ListType.cartView
+          ? _buildDismissibleContainer(context, height)
+          : _buildElevatedContainer(context, height),
+    );
+  }
+
+  DismissibleProductTile _buildDismissibleContainer(
+      BuildContext context, double height) {
+    return DismissibleProductTile(
+        id: cart!.id, child: _buildElevatedContainer(context, height));
+  }
+
+  ElevatedContainer _buildElevatedContainer(
+      BuildContext context, double height) {
+    return ElevatedContainer(
+      padding: 0.0,
+      child: InkWell(
+        onTap: () => _navigate(context),
+        child: Container(
+          height:
+              type == ListType.historyViewToday ? height * 0.25 : height * 0.18,
+          padding: const EdgeInsets.all(5),
+          child:
+              // type == ListType.historyViewToday
+              //     ? _historyViewToday(height, context)
+              Row(
+            children: [
+              _buildImage(height, context),
+              _buildProductDetails(type, context),
+              _buildTrailing(type, context),
+            ],
           ),
         ),
       ),
@@ -86,7 +105,8 @@ class ProductListTile extends StatelessWidget {
   Expanded _buildTrailing(ListType type, BuildContext context) {
     switch (type) {
       case ListType.productView:
-        return Trailing.productViewTrailing(context, product!);
+        return Trailing.productViewTrailing(
+            context, product!, favouriteBloc!, fromFavourite);
       case ListType.cartView:
         return Trailing.cartViewTrailing(context, cart!);
       case ListType.historyView:
@@ -101,6 +121,7 @@ class ProductListTile extends StatelessWidget {
     switch (type) {
       case ListType.productView:
         return CenterData.productView(product!, context);
+
       case ListType.cartView:
         return CenterData.cartView(cart!, context);
       case ListType.historyView:

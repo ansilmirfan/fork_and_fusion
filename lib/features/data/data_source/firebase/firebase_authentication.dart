@@ -44,6 +44,10 @@ class FireBaseAuthDataSource {
               .collection('cart')
               .doc(user.uid)
               .set({'cart ids': []});
+          await _firestore
+              .collection('favourite')
+              .doc(user.uid)
+              .set({'favourite': []});
         }
       }
       return userCredential.user;
@@ -83,10 +87,7 @@ class FireBaseAuthDataSource {
           'uid': user.uid,
         });
         //--------creating cart--------
-          await _firestore
-              .collection('cart')
-              .doc(user.uid)
-              .set({'cart ids': []});
+        await _firestore.collection('cart').doc(user.uid).set({'cart ids': []});
       }
       return user;
     } on FirebaseAuthException catch (e) {

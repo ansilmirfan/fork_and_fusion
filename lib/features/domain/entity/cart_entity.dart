@@ -7,6 +7,7 @@ class CartEntity {
   bool parcel;
   bool isSelected;
   String cookingRequest;
+  String status;
   String selectedType;
   CartEntity(
       {required this.id,
@@ -14,6 +15,7 @@ class CartEntity {
       required this.quantity,
       this.cookingRequest = '',
       this.parcel = false,
+      this.status = '',
       this.isSelected = false,
       this.selectedType = ''});
 }

@@ -18,15 +18,15 @@ class ProductModel extends ProductEntity {
   factory ProductModel.fromMap(
       Map<String, dynamic> map, List<CategoryEntity> category) {
     return ProductModel(
-        id: map['id'],
-        name: map['name'],
+        id: map['id'] ?? '',
+        name: map['name'] ?? '',
         image: List<String>.from(map['image']),
-        price: map['price'],
-        ingredients: map['ingredients'],
+        price: map['price'] ?? 0,
+        ingredients: map['ingredients'] ?? '',
         category: category,
-        offer: map['offer'],
+        offer: map['offer'] ?? 0,
         variants: map['variants'],
-        rating: List<int>.from(map['rating']),
+        rating: List<int>.from(map['rating'] ?? []),
         type: stringToEnumList(List<String>.from(map['type'])));
   }
   static Map<String, dynamic> toMap(ProductEntity data) {

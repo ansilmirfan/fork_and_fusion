@@ -28,12 +28,18 @@ class CenterData {
                     ?.copyWith(color: Theme.of(context).primaryColor),
               ),
               //-----------rating-------------
-              Wrap(
-                children: [
-                  const Icon(Icons.star_border_purple500),
-                  Text('${Utils.calculateRating(data.rating)}')
-                ],
-              ),
+              Utils.calculateRating(data.rating) == 0
+                  ? Text(
+                      'Be the first to rate',
+                      style: TextStyle(
+                          fontSize: 13, color: Theme.of(context).primaryColor),
+                    )
+                  : Wrap(
+                      children: [
+                        const Icon(Icons.star_border_purple500),
+                        Text('${Utils.calculateRating(data.rating)}')
+                      ],
+                    ),
             ],
           ),
         ));

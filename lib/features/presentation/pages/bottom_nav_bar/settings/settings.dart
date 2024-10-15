@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:fork_and_fusion/core/services/services.dart';
 import 'package:fork_and_fusion/core/shared/constants.dart';
@@ -47,8 +49,7 @@ class Settings extends StatelessWidget {
           description:
               'Are you sure you want to log out? Any unsaved changes will be lost, and you\'ll need to sign in again to access your account.',
           onPressed: () async {
-            SignoutUsecase usecase =
-                SignoutUsecase(await Services.firebaseRepo());
+            SignoutUsecase usecase = SignoutUsecase(Services.firebaseRepo());
             await usecase.call();
             Navigator.of(context).pushNamedAndRemoveUntil(
               '/signin',
@@ -67,7 +68,8 @@ class Settings extends StatelessWidget {
       itemBuilder: (context, index) => SettingsListTile(
         icon: SettingsData.iconData[index],
         text: SettingsData.title[index],
-        onTap: SettingsData.onTap[index],
+        onTap: () =>
+            Navigator.of(context).pushNamed(SettingsData.navigate[index]),
       ),
       separatorBuilder: (context, index) => gap,
       itemCount: SettingsData.iconData.length,

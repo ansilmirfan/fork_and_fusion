@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fork_and_fusion/core/shared/constants.dart';
-import 'package:fork_and_fusion/features/presentation/widgets/product_listtile/prodct_listtile.dart';
+import 'package:fork_and_fusion/features/presentation/widgets/product_listtile/product_listtile.dart';
 
 class OrderView extends StatelessWidget {
   bool today;

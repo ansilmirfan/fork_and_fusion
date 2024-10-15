@@ -2,13 +2,16 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 import 'package:bloc/bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fork_and_fusion/core/services/services.dart';
 import 'package:fork_and_fusion/features/domain/entity/cart_entity.dart';
+import 'package:fork_and_fusion/features/domain/entity/order_entity.dart';
 import 'package:fork_and_fusion/features/domain/usecase/firebase_usecases/cart_usecase/add_to_cart_usecase.dart';
 import 'package:fork_and_fusion/features/domain/usecase/firebase_usecases/cart_usecase/cart_delete_usecase.dart';
 import 'package:fork_and_fusion/features/domain/usecase/firebase_usecases/cart_usecase/cart_edit_usecase.dart';
 import 'package:fork_and_fusion/features/domain/usecase/firebase_usecases/cart_usecase/cart_update_few_usecase.dart';
 import 'package:fork_and_fusion/features/domain/usecase/firebase_usecases/cart_usecase/get_all_cart_usecase.dart';
+import 'package:fork_and_fusion/features/domain/usecase/firebase_usecases/order_usecase/place_order_usecase.dart';
 import 'package:meta/meta.dart';
 
 part 'cart_management_event.dart';
@@ -26,6 +29,9 @@ class CartManagementBloc
     on<CartManagementSelectedEvent>(cartManagementSelectedEvent);
     on<CartManagementDeleteEvent>(cartManagementDeleteEvent);
     on<CartManagementEditEvent>(cartManagementEditEvent);
+    on<CartManagementDeleteOneEvent>(cartManagementDeleteOneEvent);
+    on<CartManagementProceedToBuyEvent>(cartManagementProceedToBuyEvent);
+    on<CartManagementPlaceOrderEvent>(cartManagementPlaceOrderEvent);
   }
 
   FutureOr<void> cartManagementAddToCartEvent(
@@ -181,6 +187,43 @@ class CartManagementBloc
       add(CartManagemntGetAllEvent());
     } catch (e) {
       log(e.toString());
+      emit(CartManagementErrorState('Network error, please try again'));
+    }
+  }
+
+  FutureOr<void> cartManagementDeleteOneEvent(
+      CartManagementDeleteOneEvent event,
+      Emitter<CartManagementState> emit) async {
+    emit(CartManagementLoadingState());
+    try {
+      CartDeleteUsecase usecase = CartDeleteUsecase(Services.cartRepo());
+      await usecase.call(event.id);
+      add(CartManagemntGetAllEvent());
+    } catch (e) {
+      emit(CartManagementErrorState('Network error, please try again'));
+    }
+  }
+
+  FutureOr<void> cartManagementProceedToBuyEvent(
+      CartManagementProceedToBuyEvent event,
+      Emitter<CartManagementState> emit) {
+    emit(CartManagementLoadingState());
+    String url = "http://localhost:63329/app/example";
+    String clientId = dotenv.env['CLIENT_ID'] ?? '';
+    String secretId = dotenv.env['SECRET_ID'] ?? '';
+    emit(CartManagementPoceedsToBuyState(
+        clientId: clientId, secretKey: secretId, url: url));
+  }
+
+  FutureOr<void> cartManagementPlaceOrderEvent(
+      CartManagementPlaceOrderEvent event,
+      Emitter<CartManagementState> emit) async {
+    emit(CartManagementLoadingState());
+    try {
+      PlaceOrderUsecase usecase = PlaceOrderUsecase(Services.orderRepository());
+      await usecase.call(event.order);
+      add(CartManagementDeleteEvent(event.order.products));
+    } catch (e) {
       emit(CartManagementErrorState('Network error, please try again'));
     }
   }

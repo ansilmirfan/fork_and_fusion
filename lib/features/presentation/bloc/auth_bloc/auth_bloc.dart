@@ -23,7 +23,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       AuthSignInWithGoogleEvent event, Emitter<AuthState> emit) async {
     emit(AuthLoadingState());
 
-    SignInWithGoogle google = SignInWithGoogle(await Services.firebaseRepo());
+    SignInWithGoogle google = SignInWithGoogle(Services.firebaseRepo());
     try {
       final user = await google.call();
       if (user != null) {
@@ -41,7 +41,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   FutureOr<void> authSignInWithEmailEvent(
       AuthSignInWithEmailEvent event, Emitter<AuthState> emit) async {
     emit(AuthSignInLoadingState());
-    SignInWithEmail email = SignInWithEmail(await Services.firebaseRepo());
+    SignInWithEmail email = SignInWithEmail(Services.firebaseRepo());
     try {
       var user = await email.call(event.email, event.password);
 
@@ -60,7 +60,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   FutureOr<void> authSignUpWithEmailEvent(
       AuthSignUpWithEmailEvent event, Emitter<AuthState> emit) async {
     emit(AuthLoadingState());
-    SignUpWithEmail email = SignUpWithEmail(await Services.firebaseRepo());
+    SignUpWithEmail email = SignUpWithEmail( Services.firebaseRepo());
     try {
       final user = await email.call(event.email, event.password, event.name);
       if (user != null) {
@@ -78,7 +78,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       AuthAlreadyLoggedInCheckEvent event, Emitter<AuthState> emit) async {
     await Future.delayed(const Duration(seconds: 2));
     AlreadyLoggedInUsecase useCase =
-        AlreadyLoggedInUsecase(await Services.firebaseRepo());
+        AlreadyLoggedInUsecase( Services.firebaseRepo());
     bool check = useCase.call();
     if (check) {
       emit(AlreadyLoggedInState());

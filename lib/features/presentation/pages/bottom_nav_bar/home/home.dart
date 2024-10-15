@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fork_and_fusion/core/shared/constants.dart';
 import 'package:fork_and_fusion/features/domain/entity/product.dart';
+import 'package:fork_and_fusion/features/presentation/bloc/favourite/favourite_bloc.dart';
 import 'package:fork_and_fusion/features/presentation/bloc/product/product_bloc.dart';
 import 'package:fork_and_fusion/features/presentation/cubit/selected_category_cubit/selected_category_cubit.dart';
 import 'package:fork_and_fusion/features/presentation/pages/bottom_nav_bar/home/widgets/carousal.dart';
@@ -10,13 +11,14 @@ import 'package:fork_and_fusion/features/presentation/pages/bottom_nav_bar/home/
 import 'package:fork_and_fusion/features/presentation/pages/bottom_nav_bar/home/widgets/scanner_icon.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/custome_appbar.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/overlay_loading.dart';
-import 'package:fork_and_fusion/features/presentation/widgets/product_listtile/prodct_listtile.dart';
+import 'package:fork_and_fusion/features/presentation/widgets/product_listtile/product_listtile.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
 
   @override
   Widget build(BuildContext context) {
+
     hideLoadingOverlay();
     var gap = const SizedBox(height: 10);
     context.read<SelectedCategoryCubit>();
@@ -121,12 +123,19 @@ class Home extends StatelessWidget {
         ),
       );
     }
+    List<FavouriteBloc> favouriteBlocs =
+        List.generate(data.length, (index) => FavouriteBloc());
 
     return SliverList.builder(
       itemCount: data.length,
       itemBuilder: (context, index) => Padding(
         padding: const EdgeInsets.only(left: 10, right: 10),
-        child: ProductListTile(product: data[index]),
+        child: SizedBox(
+            height: Constants.dHeight * .18,
+            child: ProductListTile(
+              product: data[index],
+              favouriteBloc: favouriteBlocs[index],
+            )),
       ),
     );
   }

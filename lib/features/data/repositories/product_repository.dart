@@ -1,4 +1,4 @@
-import 'dart:developer';
+
 
 import 'package:fork_and_fusion/features/data/data_source/firebase/firebase_services.dart';
 import 'package:fork_and_fusion/features/data/model/category_model.dart';
@@ -15,8 +15,6 @@ class ProductRepository implements ProductRepo {
     final dataStream = _dataSource.featchAll('products');
 
     await for (final list in dataStream) {
-      log('Data fetched from Firebase');
-
       // ------- fetched data to ProductEntity
       List<ProductEntity> products = await Future.wait(
         list.map((map) async {
@@ -28,7 +26,6 @@ class ProductRepository implements ProductRepo {
             }),
           );
 
-          log('Data converted to ProductEntity');
           return ProductModel.fromMap(map, categories);
         }),
       );

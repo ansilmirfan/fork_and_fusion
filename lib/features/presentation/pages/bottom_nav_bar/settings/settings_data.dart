@@ -7,7 +7,6 @@ class SettingsData {
     Icons.favorite_border,
     Icons.phone,
     Icons.info_outline,
-   
   ];
   static List<String> title = [
     'Privacy Policy',
@@ -15,14 +14,6 @@ class SettingsData {
     'Favorites',
     'Contact Us',
     'About App',
-   
   ];
-  static List<void Function()?> onTap = [
-    () {},
-    () {},
-    () {},
-    () {},
-    () {},
-   
-  ];
+  static List<String> navigate = ['', '', 'favourite', '', ''];
 }

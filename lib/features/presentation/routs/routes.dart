@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fork_and_fusion/features/domain/entity/product.dart';
 import 'package:fork_and_fusion/features/presentation/pages/bottom_nav_bar/bottom_nav_bar.dart';
+import 'package:fork_and_fusion/features/presentation/pages/bottom_nav_bar/settings/pages/favourite.dart';
 import 'package:fork_and_fusion/features/presentation/pages/intro_pages/onboard/onboard.dart';
 import 'package:fork_and_fusion/features/presentation/pages/order_view/order_view.dart';
 import 'package:fork_and_fusion/features/presentation/pages/product_view/product_view.dart';
@@ -35,7 +36,7 @@ class Routes {
         } else if (args is Map) {
           return MaterialPageRoute(
               builder: (context) => ProductView(
-                    product: args['product'] ,
+                    product: args['product'],
                     fromCart: args['from'] ?? false,
                     cart: args['cart'],
                   ));
@@ -45,13 +46,12 @@ class Routes {
       case '/orderview':
         if (args is bool) {
           return MaterialPageRoute(
-            builder: (context) => OrderView(
-              today: args,
-            ),
+            builder: (context) => OrderView(today: args),
           );
         }
         return errorRoutes();
-
+      case 'favourite':
+        return MaterialPageRoute(builder: (context) => const Favourite());
       default:
         return errorRoutes();
     }

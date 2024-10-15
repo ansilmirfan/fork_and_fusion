@@ -48,3 +48,15 @@ final class CartManagementSelectedEvent extends CartManagementEvent {
   CartEntity cart;
   CartManagementSelectedEvent(this.cart);
 }
+
+final class CartManagementDeleteOneEvent extends CartManagementEvent {
+  String id;
+  CartManagementDeleteOneEvent(this.id);
+}
+
+final class CartManagementProceedToBuyEvent extends CartManagementEvent {}
+
+final class CartManagementPlaceOrderEvent extends CartManagementEvent {
+  OrderEntity order;
+  CartManagementPlaceOrderEvent(this.order);
+}

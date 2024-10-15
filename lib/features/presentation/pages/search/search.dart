@@ -3,12 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fork_and_fusion/core/shared/constants.dart';
 import 'package:fork_and_fusion/core/utils/debouncer.dart';
 import 'package:fork_and_fusion/features/domain/entity/product.dart';
+import 'package:fork_and_fusion/features/presentation/bloc/favourite/favourite_bloc.dart';
 import 'package:fork_and_fusion/features/presentation/bloc/product/product_bloc.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/buttons/custom_eleavated_button.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/custome_textform_field.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/filter/filter_bottom_sheet.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/filter/other/filter_variables.dart';
-import 'package:fork_and_fusion/features/presentation/widgets/product_listtile/prodct_listtile.dart';
+import 'package:fork_and_fusion/features/presentation/widgets/product_listtile/product_listtile.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/buttons/square_icon_button.dart';
 
 class Search extends StatelessWidget {
@@ -80,6 +81,8 @@ class Search extends StatelessWidget {
       return _centerText(
           "No matching results found. Please try a different search term.");
     }
+    List<FavouriteBloc> favouriteBlocs =
+        List.generate(data.length, (index) => FavouriteBloc());
     return Expanded(
       child: RefreshIndicator(
         onRefresh: () async {
@@ -89,8 +92,11 @@ class Search extends StatelessWidget {
         child: ListView.builder(
           padding: const EdgeInsets.all(10),
           itemCount: data.length,
-          itemBuilder: (context, index) =>
-              ProductListTile(product: data[index], fromSearch: true),
+          itemBuilder: (context, index) => ProductListTile(
+            product: data[index],
+            fromSearch: true,
+            favouriteBloc: favouriteBlocs[index],
+          ),
         ),
       ),
     );

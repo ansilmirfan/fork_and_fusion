@@ -4,6 +4,7 @@ import 'package:fork_and_fusion/core/shared/constants.dart';
 import 'package:fork_and_fusion/features/domain/entity/cart_entity.dart';
 import 'package:fork_and_fusion/features/domain/entity/product.dart';
 import 'package:fork_and_fusion/features/presentation/bloc/cart_managemnt/cart_management_bloc.dart';
+import 'package:fork_and_fusion/features/presentation/bloc/favourite/favourite_bloc.dart';
 import 'package:fork_and_fusion/features/presentation/pages/order_view/widgets/rating_dialog.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/add_to_cart_bottomsheet.dart';
 
@@ -34,6 +35,7 @@ class Trailing {
     return Expanded(
         child: Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisSize: MainAxisSize.max,
       children: [
         _squareButton(
           true,
@@ -41,6 +43,7 @@ class Trailing {
               .read<CartManagementBloc>()
               .add(CartManagementUpdateQuantityEvent(true, cart)),
         ),
+        const SizedBox(height: 10),
         Material(
           borderRadius: Constants.radius,
           elevation: 10,
@@ -54,6 +57,7 @@ class Trailing {
             ),
           ),
         ),
+        const SizedBox(height: 10),
         _squareButton(
           false,
           () => context
@@ -65,13 +69,13 @@ class Trailing {
   }
 
   static Expanded productViewTrailing(
-      BuildContext context, ProductEntity product) {
+      BuildContext context, ProductEntity product,FavouriteBloc bloc,bool fromFavourite) {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.only(bottom: 5),
         child: Column(
           children: [
-            const BouncingHeartButton(),
+            BouncingHeartButton(id: product.id,bloc: bloc,fromFavourite: fromFavourite,),
             Expanded(
               child: _squareButton(
                   true, () => showAddToCartBottomSheet(context, product), 15),

@@ -4,8 +4,16 @@ import 'package:fork_and_fusion/core/error/firebase_auth_exception.dart';
 class FirebaseServices {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   //------------read all stream-----------------
-  Stream<List<Map<String, dynamic>>> featchAll(String collection) {
+  Stream<List<Map<String, dynamic>>> featchAll(String collection,
+      [String? field, String? id]) {
     try {
+      if (field != null && id != null) {
+        return _firestore
+            .collection(collection)
+            .where(field, isEqualTo: id)
+            .snapshots()
+            .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
+      }
       return _firestore.collection(collection).snapshots().map((snapshot) {
         return snapshot.docs.map((doc) => doc.data()).toList();
       });
