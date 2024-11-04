@@ -5,10 +5,7 @@ sealed class CartManagementState {}
 
 final class CartManagementInitialState extends CartManagementState {}
 
-final class CartManagementLoadingState extends CartManagementState {
-  bool fromAnother;
-  CartManagementLoadingState({this.fromAnother = false});
-}
+final class CartManagementLoadingState extends CartManagementState {}
 
 final class CartManagementErrorState extends CartManagementState {
   String message;
@@ -17,7 +14,10 @@ final class CartManagementErrorState extends CartManagementState {
 
 final class CartManagementCompletedState extends CartManagementState {
   List<CartEntity> cart;
-  CartManagementCompletedState(this.cart);
+  bool isSelected;
+  int selectedLength;
+  int subtotal;
+  CartManagementCompletedState(this.cart, this.isSelected, this.selectedLength,this.subtotal);
 }
 
 final class CartManagementNetWorkErrorState extends CartManagementState {}

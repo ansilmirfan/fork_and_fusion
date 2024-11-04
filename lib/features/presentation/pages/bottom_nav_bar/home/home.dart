@@ -10,6 +10,9 @@ import 'package:fork_and_fusion/features/presentation/pages/bottom_nav_bar/home/
 import 'package:fork_and_fusion/features/presentation/pages/bottom_nav_bar/home/widgets/custome_item_card.dart';
 import 'package:fork_and_fusion/features/presentation/pages/bottom_nav_bar/home/widgets/scanner_icon.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/custome_appbar.dart';
+import 'package:fork_and_fusion/features/presentation/widgets/empty_message.dart';
+import 'package:fork_and_fusion/features/presentation/widgets/gap.dart';
+import 'package:fork_and_fusion/features/presentation/widgets/loading.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/overlay_loading.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/product_listtile/product_listtile.dart';
 
@@ -18,31 +21,29 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     hideLoadingOverlay();
-    var gap = const SizedBox(height: 10);
+
     context.read<SelectedCategoryCubit>();
     context.read<ProductBloc>();
     return Scaffold(
       body: BlocBuilder<ProductBloc, ProductState>(
         builder: (context, state) {
           if (state is ProductLoadingState) {
-            return const Center(child: CircularProgressIndicator());
+            return const Loading();
           }
           if (state is ProductErrorState) {
-            return Center(child: Text(state.message));
+            return EmptyMessage(message: state.message);
           }
           if (state is ProductCompletedState) {
-            return _buildBody(gap, context, state.data);
+            return _buildBody(context, state.data);
           }
-          return const ScannerIcon();
+          return ScannerIcon();
         },
       ),
     );
   }
 
-  RefreshIndicator _buildBody(
-      SizedBox gap, BuildContext context, List<ProductEntity> data) {
+  RefreshIndicator _buildBody(BuildContext context, List<ProductEntity> data) {
     return RefreshIndicator(
       onRefresh: () async {
         context.read<ProductBloc>().add(FeatchAllProducts());
@@ -56,13 +57,13 @@ class Home extends StatelessWidget {
               child: Column(
                 children: [
                   Carousal(data: data),
-                  gap,
+                  Gap(gap: 10),
                   _specialOfferCard(data),
-                  gap,
+                  Gap(gap: 10),
                   _seasonalFoodsCard(data),
-                  gap,
-                  CategoryScrollView(),
-                  gap,
+                  Gap(gap: 10),
+                  CategoryScrollView(products: data),
+                  Gap(gap: 10),
                 ],
               ),
             ),
@@ -95,15 +96,7 @@ class Home extends StatelessWidget {
           return _listview(data);
         }
         if (state is SelectedCategoryChangedState) {
-          if (state.category == 'all') {
-            return _listview(data);
-          } else {
-            final filteredData = data
-                .where((e) =>
-                    e.category.any((element) => element.id == state.category))
-                .toList();
-            return _listview(filteredData);
-          }
+          return _listview(state.filtered);
         }
         return Constants.none;
       },
@@ -130,12 +123,10 @@ class Home extends StatelessWidget {
       itemCount: data.length,
       itemBuilder: (context, index) => Padding(
         padding: const EdgeInsets.only(left: 10, right: 10),
-        child: SizedBox(
-            height: Constants.dHeight * .18,
-            child: ProductListTile(
-              product: data[index],
-              favouriteBloc: favouriteBlocs[index],
-            )),
+        child: ProductListTile(
+          product: data[index],
+          favouriteBloc: favouriteBlocs[index],
+        ),
       ),
     );
   }

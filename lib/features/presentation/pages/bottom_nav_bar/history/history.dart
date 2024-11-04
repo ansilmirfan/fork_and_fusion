@@ -8,8 +8,8 @@ import 'package:fork_and_fusion/features/presentation/widgets/custome_appbar.dar
 import 'package:fork_and_fusion/features/presentation/widgets/overlay_loading.dart';
 
 class History extends StatelessWidget {
-  const History({super.key});
-
+  History({super.key});
+  final ScrollController controller = ScrollController();
   @override
   Widget build(BuildContext context) {
     hideLoadingOverlay();
@@ -17,15 +17,18 @@ class History extends StatelessWidget {
       length: 2,
       child: Scaffold(
         body: NestedScrollView(
+          controller: controller,
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return [
               CustomAppbar(bottom: _buildTabBar(context)),
             ];
           },
-          body: const TabBarView(
+          body: TabBarView(
             children: [
               Today(),
-              All(),
+              All(
+                controller: controller,
+              ),
             ],
           ),
         ),

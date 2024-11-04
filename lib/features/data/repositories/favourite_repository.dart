@@ -1,3 +1,5 @@
+
+
 import 'package:fork_and_fusion/core/services/services.dart';
 import 'package:fork_and_fusion/features/data/data_source/firebase/firebase_authentication.dart';
 import 'package:fork_and_fusion/features/data/data_source/firebase/firebase_services.dart';
@@ -17,6 +19,7 @@ class FavouriteRepository extends FavouriteRepo {
     var productId = <String>[];
     if (user != null) {
       var map = await _dataSource.getOne(collection, user.uid);
+   
       productId = List<String>.from(map['favourite'] ?? []);
       if (productId.contains(id)) {
         throw 'Product is already in the favourite';

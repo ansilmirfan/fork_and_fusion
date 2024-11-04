@@ -10,7 +10,7 @@ import 'package:fork_and_fusion/features/presentation/bloc/cart_quantity/cart_qu
 import 'package:fork_and_fusion/features/presentation/bloc/category_bloc/category_bloc.dart';
 import 'package:fork_and_fusion/features/presentation/bloc/order_bloc/order_bloc.dart';
 import 'package:fork_and_fusion/features/presentation/bloc/product/product_bloc.dart';
-import 'package:fork_and_fusion/features/presentation/cubit/bottom_nav/bottom_nav_cubit.dart';
+
 import 'package:fork_and_fusion/features/presentation/cubit/favourite_get_all/favourite_get_all_cubit.dart';
 
 import 'package:fork_and_fusion/features/presentation/cubit/selected_category_cubit/selected_category_cubit.dart';
@@ -23,6 +23,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   if (kIsWeb) {
+    
     await Firebase.initializeApp(options: Services.firebaseOptions);
   } else {
     await Firebase.initializeApp();
@@ -30,7 +31,6 @@ void main() async {
   await dotenv.load(fileName: '.env');
   runApp(const MyApp());
 }
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -45,13 +45,12 @@ class MyApp extends StatelessWidget {
         BlocProvider(
             create: (context) => CategoryBloc()..add(CategoryGetAllEvent())),
         BlocProvider(create: (context) => SelectedCategoryCubit()),
-        BlocProvider(create: (context) => BottomNavCubit()),
         BlocProvider(
             create: (context) =>
                 CartManagementBloc()..add(CartManagemntGetAllEvent())),
         BlocProvider(create: (context) => SelectedVariantCubit()),
         BlocProvider(create: (context) => FavouriteGetAllCubit()),
-         BlocProvider(create: (context) => OrderBloc()..add(OrderGetAllEvent()))
+        BlocProvider(create: (context) => OrderBloc()..add(OrderGetAllEvent()))
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

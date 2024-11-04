@@ -7,6 +7,7 @@ import 'package:fork_and_fusion/features/domain/usecase/Auth%20usecase/signout_u
 import 'package:fork_and_fusion/features/presentation/pages/bottom_nav_bar/settings/settings_data.dart';
 import 'package:fork_and_fusion/features/presentation/pages/bottom_nav_bar/settings/widgets/settings_listtile.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/custom_alert_dialog.dart';
+import 'package:fork_and_fusion/features/presentation/widgets/custom_circle_avathar.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/overlay_loading.dart';
 
 class Settings extends StatelessWidget {
@@ -42,20 +43,22 @@ class Settings extends StatelessWidget {
     return SettingsListTile(
       icon: Icons.logout,
       text: 'Logout',
-      onTap: () {
-        showCustomAlertDialog(
-          context: context,
-          title: 'Confirm Logout',
-          description:
-              'Are you sure you want to log out? Any unsaved changes will be lost, and you\'ll need to sign in again to access your account.',
-          onPressed: () async {
-            SignoutUsecase usecase = SignoutUsecase(Services.firebaseRepo());
-            await usecase.call();
-            Navigator.of(context).pushNamedAndRemoveUntil(
-              '/signin',
-              (route) => false,
-            );
-          },
+      onTap: () => _showLogOutConfiremationDialog(context),
+    );
+  }
+
+  void _showLogOutConfiremationDialog(BuildContext context) {
+    return showCustomAlertDialog(
+      context: context,
+      title: 'Confirm Logout',
+      description:
+          'Are you sure you want to log out? Any unsaved changes will be lost, and you\'ll need to sign in again to access your account.',
+      onPressed: () async {
+        SignoutUsecase usecase = SignoutUsecase(Services.firebaseRepo());
+        await usecase.call();
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          '/signin',
+          (route) => false,
         );
       },
     );
@@ -80,10 +83,7 @@ class Settings extends StatelessWidget {
       String? image, String? email, BuildContext context, SizedBox gap) {
     return Column(children: [
       image != null
-          ? CircleAvatar(
-              radius: 60,
-              backgroundImage: NetworkImage(image),
-            )
+          ? CustomCircleAvathar(url: image, radius: 60)
           : CircleAvatar(
               radius: 60,
               child: Text(

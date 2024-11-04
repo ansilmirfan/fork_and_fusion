@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fork_and_fusion/features/presentation/pages/intro_pages/onboard/bloc/page_bloc.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/buttons/square_icon_button.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/buttons/textbutton.dart';
+import 'package:fork_and_fusion/features/presentation/widgets/cache_image.dart';
 
 class CustomePage extends StatelessWidget {
   String bgImage;
@@ -25,12 +26,15 @@ class CustomePage extends StatelessWidget {
     return BlocBuilder<PageBloc, PageState>(
       builder: (context, state) {
         return LayoutBuilder(
-          builder: (context, constraints) => Container(
+          builder: (context, constraints) => SizedBox(
             height: constraints.maxHeight,
             width: constraints.maxWidth,
-            decoration: _bgImage(),
             child: Stack(
               children: [
+                SizedBox.expand(
+                    child: CacheImage(
+                  url: bgImage,
+                )),
                 _skipButton(context),
                 Center(
                   child: Align(

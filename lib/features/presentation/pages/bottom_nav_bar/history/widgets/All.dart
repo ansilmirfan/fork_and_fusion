@@ -1,4 +1,4 @@
-
+// ignore_for_file: use_build_context_synchronously
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fork_and_fusion/core/shared/constants.dart';
@@ -10,17 +10,28 @@ import 'package:fork_and_fusion/features/presentation/pages/bottom_nav_bar/histo
 import 'package:fork_and_fusion/features/presentation/widgets/buttons/square_icon_button.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/empty_message.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/loading.dart';
+import 'package:fork_and_fusion/features/presentation/widgets/overlay_loading.dart';
+import 'package:fork_and_fusion/features/presentation/widgets/snackbar.dart';
 
 class All extends StatelessWidget {
-  const All({super.key});
+  final ScrollController controller;
+  All({super.key, required this.controller});
   final gap = const SizedBox(height: 10);
+  Map<String, List<OrderEntity>> ordersMap = {};
 
   @override
   Widget build(BuildContext context) {
     context.read<OrderBloc>();
     return RefreshIndicator(
       onRefresh: () async => context.read<OrderBloc>().add(OrderGetAllEvent()),
-      child: BlocBuilder<OrderBloc, OrderState>(
+      child: BlocConsumer<OrderBloc, OrderState>(
+        listener: (context, state) {
+          if (state is OrderCancelLoadingEvent) {
+            showLoadingOverlay(context);
+          } else {
+            hideLoadingOverlay();
+          }
+        },
         builder: (context, state) {
           if (state is OrderLoadingState) {
             return Loading();
@@ -34,32 +45,39 @@ class All extends StatelessWidget {
     );
   }
 
-  Padding _buildBody(BuildContext context, List<OrderEntity> orders) {
+  _buildBody(BuildContext context, List<OrderEntity> orders) {
+    if (orders.isEmpty) {
+      return EmptyMessage(message: 'No orders yet,Ready to order?');
+    }
     return Padding(
       padding: const EdgeInsets.only(left: 15, right: 15),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          gap,
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [_subtotal(context,orders), _datePicker(context)],
-          ),
-          _listView(orders),
-        ],
+      child: SingleChildScrollView(
+        // physics: NeverScrollableScrollPhysics(),
+        controller: controller,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            gap,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [_subtotal(context, orders), _datePicker(context)],
+            ),
+            _listView(orders),
+          ],
+        ),
       ),
     );
   }
 
   Widget _listView(List<OrderEntity> orders) {
-    orders = orders.reversed.toList();
-    var ordersMap = convertToMap(orders);
+    ordersMap = convertToMap(orders);
     var keys = ordersMap.keys.toList();
 
     return ListView.builder(
       padding: EdgeInsets.zero,
       shrinkWrap: true,
-      physics: const AlwaysScrollableScrollPhysics(),
+      // physics: NeverScrollableScrollPhysics(),
+      controller: controller,
       itemCount: keys.length,
       itemBuilder: (context, index) {
         String dateKey = keys[index];
@@ -74,7 +92,9 @@ class All extends StatelessWidget {
                 ordersForDate.length,
                 (i) => SizedBox(
                   width: double.infinity,
-                  child: HistoryListTile(order: ordersForDate[i],),
+                  child: HistoryListTile(
+                    order: ordersForDate[i],
+                  ),
                 ),
               ),
             ),
@@ -86,6 +106,7 @@ class All extends StatelessWidget {
 
   Center _buildDate(BuildContext context, String dateKey) {
     return Center(
+      key: Key(dateKey),
       child: Container(
         margin: const EdgeInsets.only(bottom: 10, top: 10),
         padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -103,15 +124,35 @@ class All extends StatelessWidget {
       icon: Icons.calendar_month,
       onTap: () async {
         DateTime? picked = await dateAlertDialog(context);
+        if (picked != null) {
+          final formattedDate = Utils.formatDate(picked);
+
+          _showPickedData(formattedDate, context);
+        }
       },
     );
+  }
+
+  _showPickedData(String dateKey, BuildContext context) {
+    if (ordersMap.containsKey(dateKey)) {
+      final orders = ordersMap[dateKey] ?? [];
+      if (orders.isNotEmpty) {
+        Navigator.of(context).pushNamed('/picked datapage', arguments: orders);
+      }
+    } else {
+      showCustomSnackbar(
+        context: context,
+        message: "No Data found for the selected date",
+        isSuccess: false,
+      );
+    }
   }
 
   Text _subtotal(BuildContext context, List<OrderEntity> orders) {
     var total = orders.map((e) => e.amount).reduce((a, b) => a + b);
     return Text(
       'Subtotal ₹$total',
-      style: Theme.of(context).textTheme.headlineMedium,
+      style: Theme.of(context).textTheme.headlineSmall,
     );
   }
 

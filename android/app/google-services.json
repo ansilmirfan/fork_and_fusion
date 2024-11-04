@@ -15,13 +15,66 @@
       },
       "oauth_client": [
         {
-          "client_id": "1055687672689-jsqvfvkr3irjrnp9pfa6onv89ukk927b.apps.googleusercontent.com",
+          "client_id": "1055687672689-14sl0kbm9i2i6h7d6ek8o45kbuc9fofb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ansil.fork_and_fusion",
+            "certificate_hash": "af8948bcfc0c508944ee469e4866cb0b5edfdad7"
+          }
+        },
+        {
+          "client_id": "1055687672689-8rpn192ld6cdt05ums0rc4fvmafi8i4e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ansil.fork_and_fusion",
+            "certificate_hash": "994cefb4dfc4c81a92e8847c8ae5e673f08b255b"
+          }
+        },
+        {
+          "client_id": "1055687672689-jnrv8hebqjs9jd0hlghjd8tab737b6b8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ansil.fork_and_fusion",
+            "certificate_hash": "81df90814969d60a4cd3e9afc854532fce332ab2"
+          }
+        },
+        {
+          "client_id": "1055687672689-kqjs9gjqtrmbl68glagcer1eidb6qk93.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.ansil.fork_and_fusion",
             "certificate_hash": "6cef715bc8eefb2d02f773da0dc07f031542dff8"
           }
         },
+        {
+          "client_id": "1055687672689-ebtlltaau4savf7ea6j1f8r9n6jsp61r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnVe0tUmpz1dZnEJt7HbdqgcWJDvjlJyM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1055687672689-ebtlltaau4savf7ea6j1f8r9n6jsp61r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1055687672689:android:dc6123df54361e787cecd0",
+        "android_client_info": {
+          "package_name": "com.ansil.fork_and_fusion_admin"
+        }
+      },
+      "oauth_client": [
         {
           "client_id": "1055687672689-ebtlltaau4savf7ea6j1f8r9n6jsp61r.apps.googleusercontent.com",
           "client_type": 3

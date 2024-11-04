@@ -83,4 +83,8 @@ class Utils {
         '${day < 10 ? '0$day' : day}/${month < 10 ? '0$month' : month}/${date.year}';
     return formatedDate;
   }
+
+  static bool isToday(DateTime date) {
+    return formatDate(date) == formatDate(DateTime.now());
+  }
 }

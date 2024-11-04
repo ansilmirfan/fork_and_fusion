@@ -5,6 +5,7 @@ import 'package:fork_and_fusion/features/domain/entity/product.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/add_to_cart_bottomsheet.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/cache_image.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/buttons/square_icon_button.dart';
+import 'package:fork_and_fusion/features/presentation/widgets/elevated_container.dart';
 
 class CustomItemCard extends StatelessWidget {
   bool offer;
@@ -26,16 +27,13 @@ class CustomItemCard extends StatelessWidget {
     return Visibility(
       visible: data.isNotEmpty,
       child: SizedBox(
-        height: Constants.dHeight * .26,
+        height: Constants.dHeight * .30,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(title),
             Expanded(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: _productCard(context),
-              ),
+              child: productScrollView(context),
             ),
           ],
         ),
@@ -43,33 +41,34 @@ class CustomItemCard extends StatelessWidget {
     );
   }
 
-  Row _productCard(BuildContext context) {
-    return Row(
-      children: List.generate(
-        data.length,
-        (index) => Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Material(
-            borderRadius: Constants.radius,
-            elevation: 10,
-            color: Theme.of(context).colorScheme.tertiary,
-            child: Stack(
-              children: [
-                Container(
-                  width: Constants.dHeight * .18,
-                  padding: const EdgeInsets.all(5),
-                  child: Column(
-                    children: [
-                      _image(index),
-                      _dishNameAndprice(context, index),
-                    ],
-                  ),
-                ),
-                _onTap(context, index),
-                _addToCartButton(context, index)
-              ],
+  productScrollView(BuildContext context) {
+    return ListView.builder(
+      scrollDirection: Axis.horizontal,
+      itemCount: data.length,
+      itemBuilder: (context, index) => _poductCard(context, index),
+    );
+  }
+
+  Padding _poductCard(BuildContext context, int index) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 5, bottom: 5, top: 5),
+      child: ElevatedContainer(
+        child: Stack(
+          children: [
+            Container(
+              width: Constants.dWidth * .4,
+              padding: const EdgeInsets.all(5),
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  _image(index),
+                  _dishNameAndprice(context, index),
+                ],
+              ),
             ),
-          ),
+            _onTap(context, index),
+            _addToCartButton(context, index)
+          ],
         ),
       ),
     );
@@ -105,55 +104,51 @@ class CustomItemCard extends StatelessWidget {
     );
   }
 
-  Expanded _dishNameAndprice(BuildContext context, int index) {
-    return Expanded(
-      flex: 1,
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 5),
-        child: Column(
-          //---------dish name-----------------
-          children: [
-            Align(
-                alignment: Alignment.topLeft,
-                child: Text(Utils.capitalizeEachWord(data[index].name))),
-            //------------amount----------------
-            Row(
-              mainAxisAlignment: offer
-                  ? MainAxisAlignment.spaceBetween
-                  : MainAxisAlignment.start,
-              children: [
-                //------------extract price method for selecting the minimum value from varints
-                //-----------or selecting the price directly
-                Visibility(
-                  visible: offer,
-                  child: Text(
-                    '₹${Utils.extractPrice(data[index])}',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.copyWith(decoration: TextDecoration.lineThrough),
-                  ),
-                ),
-
-                //---------------------reducing the offer percentage from the actual price-----------------
-                Text(
-                  "₹${Utils.calculateOffer(data[index])}",
+  _dishNameAndprice(BuildContext context, int index) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: Column(
+        //---------dish name-----------------
+        children: [
+          Align(
+              alignment: Alignment.topLeft,
+              child: Text(Utils.capitalizeEachWord(data[index].name))),
+          //------------amount----------------
+          Row(
+            mainAxisAlignment: offer
+                ? MainAxisAlignment.spaceBetween
+                : MainAxisAlignment.start,
+            children: [
+              //------------extract price method for selecting the minimum value from varints
+              //-----------or selecting the price directly
+              Visibility(
+                visible: offer,
+                child: Text(
+                  '₹${Utils.extractPrice(data[index])}',
                   style: Theme.of(context)
                       .textTheme
                       .bodyMedium
-                      ?.copyWith(color: Theme.of(context).primaryColor),
+                      ?.copyWith(decoration: TextDecoration.lineThrough),
                 ),
-              ],
-            )
-          ],
-        ),
+              ),
+
+              //---------------------reducing the offer percentage from the actual price-----------------
+              Text(
+                "₹${Utils.calculateOffer(data[index])}",
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium
+                    ?.copyWith(color: Theme.of(context).primaryColor),
+              ),
+            ],
+          )
+        ],
       ),
     );
   }
 
   Expanded _image(int index) {
     return Expanded(
-      flex: 2,
       child: ClipRRect(
         borderRadius: Constants.radius,
         child: SizedBox(

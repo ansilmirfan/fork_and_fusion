@@ -25,9 +25,12 @@ class Quantity extends StatelessWidget {
                   height: 40,
                   width: 40,
                   padding: Constants.padding10,
-                  child: Text(
-                    state.quantity.toString(),
-                    textAlign: TextAlign.center,
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      state.quantity.toString(),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ),
               ),

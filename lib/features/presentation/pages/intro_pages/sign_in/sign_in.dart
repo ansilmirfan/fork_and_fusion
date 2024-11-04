@@ -89,7 +89,7 @@ class _SignInPageState extends State<SignInPage> {
       listener: (context, state) {
         if (state is AuthCompleatedState) {
           Navigator.of(context)
-              .pushReplacementNamed('/bottomnav')
+              .pushReplacementNamed('/bottomnav',arguments: 0)
               .then((value) {
             emailController.clear();
             passwordController.clear();
@@ -124,7 +124,7 @@ class _SignInPageState extends State<SignInPage> {
       listener: (context, state) {
         if (state is AuthCompleatedState) {
           Navigator.of(context)
-              .pushReplacementNamed('/bottomnav')
+              .pushReplacementNamed('/bottomnav',arguments: 0)
               .then((value) {
             emailController.clear();
             passwordController.clear();

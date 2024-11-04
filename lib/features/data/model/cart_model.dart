@@ -11,7 +11,9 @@ class CartModel extends CartEntity {
       super.parcel,
       super.cookingRequest,
       super.selectedType,
+      super.rated,
       super.status,
+      super.repaid,
       super.isSelected});
   factory CartModel.fromMap(Map<String, dynamic> map, ProductEntity product) {
     return CartModel(
@@ -20,21 +22,25 @@ class CartModel extends CartEntity {
       quantity: map['quantity'],
       cookingRequest: map['cooking request'],
       parcel: map['parcel'],
-      status: map['status'],
+      status: map['status'] ?? 'Processing',
+      rated: map['rated'] ?? false,
       selectedType: map['selected type'],
       isSelected: map['selected'],
+      repaid: map['repaid'] ?? false,
     );
   }
   static Map<String, dynamic> toMap(CartEntity cart) {
     return {
       'id': cart.id,
       'product': cart.product.id,
-      'status': cart.status,
+      'status': cart.status.isEmpty ? 'Processing' : cart.status,
       'quantity': cart.quantity,
       'parcel': cart.parcel,
       'cooking request': cart.cookingRequest,
       'selected type': cart.selectedType,
-      'selected': cart.isSelected
+      'rated': cart.rated,
+      'selected': cart.isSelected,
+      'repaid': cart.repaid,
     };
   }
 
@@ -46,8 +52,10 @@ class CartModel extends CartEntity {
       'status': cart.status,
       'parcel': cart.parcel,
       'cooking request': cart.cookingRequest,
+      'rated': cart.rated,
       'selected type': cart.selectedType,
-      'selected': cart.isSelected
+      'selected': cart.isSelected,
+      'repaid': cart.repaid,
     };
   }
 

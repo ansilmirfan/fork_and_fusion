@@ -1,4 +1,4 @@
-import 'dart:developer';
+
 
 import 'package:fork_and_fusion/core/services/services.dart';
 import 'package:fork_and_fusion/features/data/data_source/firebase/firebase_authentication.dart';
@@ -54,5 +54,26 @@ class OrderRepository extends OrderRepo {
   Future<void> placeOrder(OrderEntity order) async {
     final map = OrderModel.toMap(order);
     await _dataSource.create(collection, map);
+  }
+
+  @override
+  Future<bool> canecelOrder(OrderEntity order) async {
+    order.status = 'Cancelled';
+    for (var element in order.products) {
+      element.status = 'Cancelled';
+    }
+    return _dataSource.edit(order.id, collection, OrderModel.toMap(order));
+  }
+
+  @override
+  Future<bool> orderRating(
+      OrderEntity order, String productId, int rating) async {
+    final product = await _dataSource.getOne('products', productId);
+    final ratingList = List.from(product["rating"] ?? []);
+    ratingList.add(rating);
+    await _dataSource.edit(productId, 'products', {'rating': ratingList});
+    
+    return await _dataSource.edit(
+        order.id, collection, OrderModel.toMap(order));
   }
 }

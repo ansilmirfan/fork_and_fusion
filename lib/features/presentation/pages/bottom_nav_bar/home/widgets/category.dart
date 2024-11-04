@@ -3,13 +3,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fork_and_fusion/core/shared/constants.dart';
 import 'package:fork_and_fusion/core/utils/utils.dart';
 import 'package:fork_and_fusion/features/domain/entity/category.dart';
+import 'package:fork_and_fusion/features/domain/entity/product.dart';
 import 'package:fork_and_fusion/features/presentation/bloc/category_bloc/category_bloc.dart';
 import 'package:fork_and_fusion/features/presentation/cubit/selected_category_cubit/selected_category_cubit.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/cache_image.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/filter/category_bottom_sheet.dart';
 
 class CategoryScrollView extends StatelessWidget {
-  CategoryScrollView({super.key});
+  List<ProductEntity> products;
+  CategoryScrollView({super.key, required this.products});
   CarouselController controller = CarouselController();
   bool isSelected = false;
   double width = Constants.dWidth;
@@ -66,11 +68,11 @@ class CategoryScrollView extends StatelessWidget {
               if (value == 0) {
                 context
                     .read<SelectedCategoryCubit>()
-                    .onSelectedCategory('all', 0);
+                    .onSelectedCategory('all', 0, products);
               } else {
                 context
                     .read<SelectedCategoryCubit>()
-                    .onSelectedCategory(category[value - 1].id, value - 1);
+                    .onSelectedCategory(category[value - 1].id, value - 1, products);
               }
             },
             itemExtent: width * .2,
@@ -141,7 +143,7 @@ class CategoryScrollView extends StatelessWidget {
   TextButton _moreButton(BuildContext context) {
     return TextButton(
       onPressed: () {
-        categoryBottomSheet(context);
+        categoryBottomSheet(context,products);
       },
       child: const Text('more..'),
     );

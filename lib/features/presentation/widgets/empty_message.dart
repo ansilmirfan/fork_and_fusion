@@ -7,7 +7,13 @@ class EmptyMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text(message),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text(
+          message,
+          textAlign: TextAlign.center,
+        ),
+      ),
     );
   }
 }

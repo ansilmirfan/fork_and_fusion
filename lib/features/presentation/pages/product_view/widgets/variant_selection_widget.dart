@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fork_and_fusion/core/shared/constants.dart';
@@ -37,36 +35,40 @@ class VariantSelectionWidget extends StatelessWidget {
           alignment: Alignment.center,
           padding: Constants.padding10,
           child: StatefulBuilder(
-            builder: (context, setState) => Wrap(
-              runSpacing: 10,
-              spacing: 10,
-              children: List.generate(
-                entries.length,
-                (index) {
-                  final variantName = entries[index].key;
+            builder: (context, setState) => SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Wrap(
+                runSpacing: 10,
+                spacing: 10,
+                direction: Axis.horizontal,
+                children: List.generate(
+                  entries.length,
+                  (index) {
+                    final variantName = entries[index].key;
 
-                  return ChoiceChip(
-                    onSelected: (value) {
-                      for (var i = 0; i < selectedVariant.length; i++) {
-                        selectedVariant[i] = i == index;
-                      }
-                      context
-                          .read<SelectedVariantCubit>()
-                          .onSelectionChanged(variantName);
-                      cartBloc.add(CartManagementCheckForDuplicate(
-                        parcel: parcel,
-                        productId: product.id,
-                        selectedVarinat: variantName,
-                      ));
+                    return ChoiceChip(
+                      onSelected: (value) {
+                        for (var i = 0; i < selectedVariant.length; i++) {
+                          selectedVariant[i] = i == index;
+                        }
+                        context
+                            .read<SelectedVariantCubit>()
+                            .onSelectionChanged(variantName);
+                        cartBloc.add(CartManagementCheckForDuplicate(
+                          parcel: parcel,
+                          productId: product.id,
+                          selectedVarinat: variantName,
+                        ));
 
-                      setState(() {});
-                    },
-                    selectedColor: Theme.of(context).colorScheme.secondary,
-                    label: Text(
-                        "$variantName   : ₹${Utils.calculateOffer(product, variantName)}  "),
-                    selected: selectedVariant[index],
-                  );
-                },
+                        setState(() {});
+                      },
+                      selectedColor: Theme.of(context).colorScheme.secondary,
+                      label: Text(
+                          "$variantName   : ₹${Utils.calculateOffer(product, variantName)}  "),
+                      selected: selectedVariant[index],
+                    );
+                  },
+                ),
               ),
             ),
           ),

@@ -4,7 +4,7 @@ import 'package:fork_and_fusion/core/shared/constants.dart';
 import 'package:fork_and_fusion/features/domain/entity/cart_entity.dart';
 import 'package:fork_and_fusion/features/domain/entity/product.dart';
 import 'package:fork_and_fusion/features/presentation/bloc/cart_managemnt/cart_management_bloc.dart';
-import 'package:fork_and_fusion/features/presentation/cubit/bottom_nav/bottom_nav_cubit.dart';
+
 import 'package:fork_and_fusion/features/presentation/pages/product_view/bloc/quantity_bloc/quantity_bloc.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/snackbar.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/buttons/textbutton.dart';
@@ -69,43 +69,46 @@ class AddToCartButton extends StatelessWidget {
             return CustomTextButton(progress: true);
           }
           if (state is CartManagementGoToCartState) {
-            return CustomTextButton(
-              onPressed: () {
-                if (fromSearch) {
-                  Navigator.of(context).pop();
-                 
-
-                  Navigator.of(context).pushReplacementNamed('/bottomnav');
-                  context.read<BottomNavCubit>().onPageChanage(1);
-                } else {
-                  Navigator.of(context).pop();
-                  context.read<BottomNavCubit>().onPageChanage(1);
-                }
-              },
-              text: 'Go to cart',
-              icon: const Icon(Icons.shopping_cart),
-            );
+            return _gotoCartButton(context);
           }
-          return CustomTextButton(
-            text: fromCart ? 'Save' : 'Add to Cart',
-            icon: const Icon(Icons.shopping_cart),
-            onPressed: () {
-              CartEntity cart = CartEntity(
-                  id: fromCart ? cartEntity?.id ?? '' : '',
-                  product: product,
-                  quantity: quantityBloc.quantity,
-                  cookingRequest: cookingRequest(),
-                  parcel: quantityBloc.parcelStatus,
-                  isSelected:
-                      fromCart ? cartEntity?.isSelected ?? false : false,
-                  selectedType: getSelectedVariant());
-              fromCart
-                  ? cartBloc.add(CartManagementEditEvent(cart))
-                  : cartBloc.add(CartManagementAddToCartEvent(cart));
-            },
-          );
+          return _addToCartButton();
         },
       ),
+    );
+  }
+
+  CustomTextButton _addToCartButton() {
+    return CustomTextButton(
+      text: fromCart ? 'Save' : 'Add to Cart',
+      icon: const Icon(Icons.shopping_cart),
+      onPressed: () {
+        CartEntity cart = CartEntity(
+            id: fromCart ? cartEntity?.id ?? '' : '',
+            product: product,
+            quantity: quantityBloc.quantity,
+            cookingRequest: cookingRequest(),
+            parcel: quantityBloc.parcelStatus,
+            status: 'Processing',
+            isSelected: fromCart ? cartEntity?.isSelected ?? false : false,
+            selectedType: getSelectedVariant());
+        fromCart
+            ? cartBloc.add(CartManagementEditEvent(cart))
+            : cartBloc.add(CartManagementAddToCartEvent(cart));
+      },
+    );
+  }
+
+  CustomTextButton _gotoCartButton(BuildContext context) {
+    return CustomTextButton(
+      onPressed: () {
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          '/bottomnav',
+          (Route<dynamic> route) => route.settings.name == '/home',
+          arguments: 1,
+        );
+      },
+      text: 'Go to cart',
+      icon: const Icon(Icons.shopping_cart),
     );
   }
 }

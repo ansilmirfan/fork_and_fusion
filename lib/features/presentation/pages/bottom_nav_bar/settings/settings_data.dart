@@ -15,5 +15,11 @@ class SettingsData {
     'Contact Us',
     'About App',
   ];
-  static List<String> navigate = ['', '', 'favourite', '', ''];
+  static List<String> navigate = [
+    '/privacy policy',
+    '/terms of service',
+    '/favourite',
+    '/contact us',
+    '/about the app'
+  ];
 }

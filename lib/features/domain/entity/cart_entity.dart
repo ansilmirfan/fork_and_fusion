@@ -7,15 +7,20 @@ class CartEntity {
   bool parcel;
   bool isSelected;
   String cookingRequest;
+  bool rated;
   String status;
   String selectedType;
+  bool repaid;
   CartEntity(
       {required this.id,
       required this.product,
       required this.quantity,
       this.cookingRequest = '',
       this.parcel = false,
-      this.status = '',
+      this.status = 'Processing',
       this.isSelected = false,
-      this.selectedType = ''});
+      this.rated = false,
+      this.selectedType = '',
+      this.repaid = false,
+      });
 }

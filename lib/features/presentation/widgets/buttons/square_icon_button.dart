@@ -3,14 +3,14 @@ import 'package:fork_and_fusion/core/shared/constants.dart';
 
 class SquareIconButton extends StatelessWidget {
   IconData icon;
-  double height;
+  double? height;
   bool white;
   bool loading;
   void Function()? onTap;
   SquareIconButton({
     super.key,
     required this.icon,
-    this.height = 25,
+    this.height,
     this.loading = false,
     this.onTap,
     this.white = true,

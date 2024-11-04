@@ -17,5 +17,5 @@ class OrderEntity {
       required this.customerId,
       required this.table,
       required this.date,
-      this.status = 'processing'});
+      this.status = 'Processing'});
 }

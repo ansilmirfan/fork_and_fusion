@@ -4,6 +4,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:fork_and_fusion/core/error/firebase_auth_exception.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -18,43 +19,55 @@ class FireBaseAuthDataSource {
   // Google sign in
   Future<User?> signInWithGoogle() async {
     try {
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      if (googleUser == null) {
-        return null;
-      }
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
-      final AuthCredential credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
-      final UserCredential userCredential =
-          await _firebaseAuth.signInWithCredential(credential);
-      final user = userCredential.user;
-      //if user does not exist add that
-      if (user != null) {
-        final userDoc = await _firestore.collection('user').doc(user.uid).get();
-        if (!userDoc.exists) {
-          await _firestore.collection('user').doc(user.uid).set({
-            'uid': user.uid,
-            'email': user.email,
-            'name': user.displayName,
-            'image url': user.photoURL,
-          });
-          //--------creating cart--------
-          await _firestore
-              .collection('cart')
-              .doc(user.uid)
-              .set({'cart ids': []});
-          await _firestore
-              .collection('favourite')
-              .doc(user.uid)
-              .set({'favourite': []});
+      if (kIsWeb) {
+        return await _signInWithGoogleWeb();
+      } else {
+        final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+        if (googleUser == null) {
+          return null;
         }
+        final GoogleSignInAuthentication googleAuth =
+            await googleUser.authentication;
+        final AuthCredential credential = GoogleAuthProvider.credential(
+            accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
+        final UserCredential userCredential =
+            await _firebaseAuth.signInWithCredential(credential);
+        final user = userCredential.user;
+        //if user does not exist add that
+        if (user != null) {
+          final userDoc =
+              await _firestore.collection('user').doc(user.uid).get();
+          if (!userDoc.exists) {
+            _createCredentials(user);
+          }
+        }
+        return userCredential.user;
       }
-      return userCredential.user;
     } on FirebaseAuthException catch (e) {
       throw FirebaseExceptions.handleAuthExceptions(e);
     } catch (e) {
       log(e.toString());
+    }
+  }
+
+  Future<User?> _signInWithGoogleWeb() async {
+    try {
+      final GoogleAuthProvider googleProvider = GoogleAuthProvider();
+      final UserCredential userCredential =
+          await _firebaseAuth.signInWithPopup(googleProvider);
+
+      final User? user = userCredential.user;
+
+      if (user != null) {
+        final userDoc = await _firestore.collection('user').doc(user.uid).get();
+        if (!userDoc.exists) {
+          await _createCredentials(user);
+        }
+      }
+
+      return user;
+    } catch (e) {
+      return null;
     }
   }
 
@@ -81,13 +94,7 @@ class FireBaseAuthDataSource {
           email: email, password: password);
       final user = userCredential.user;
       if (user != null) {
-        await _firestore.collection('user').doc(user.uid).set({
-          'name': name,
-          "email": email,
-          'uid': user.uid,
-        });
-        //--------creating cart--------
-        await _firestore.collection('cart').doc(user.uid).set({'cart ids': []});
+        _createCredentials(user);
       }
       return user;
     } on FirebaseAuthException catch (e) {
@@ -126,5 +133,21 @@ class FireBaseAuthDataSource {
   Future<void> signOut() async {
     await _googleSignIn.signOut();
     await _firebaseAuth.signOut();
+  }
+
+  Future<void> _createCredentials(User user) async {
+    await _firestore.collection('user').doc(user.uid).set({
+      'uid': user.uid,
+      'email': user.email,
+      'name': user.displayName,
+      'image url': user.photoURL,
+    });
+    //--------creating cart--------
+    await _firestore.collection('cart').doc(user.uid).set({'cart ids': []});
+    //--------creating favourite--------
+    await _firestore
+        .collection('favourite')
+        .doc(user.uid)
+        .set({'favourite': []});
   }
 }

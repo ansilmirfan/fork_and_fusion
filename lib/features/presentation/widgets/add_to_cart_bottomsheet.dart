@@ -27,16 +27,28 @@ showAddToCartBottomSheet(BuildContext context, ProductEntity product,
   );
 }
 
-class AddToCart extends StatelessWidget {
+class AddToCart extends StatefulWidget {
   ProductEntity product;
   bool fromSearch;
   AddToCart({super.key, required this.product, required this.fromSearch});
+
+  @override
+  State<AddToCart> createState() => _AddToCartState();
+}
+
+class _AddToCartState extends State<AddToCart> {
   final TextEditingController controller = TextEditingController();
+
   List<bool> selectedVariant = [];
+
   String selected = '';
+
   var gap = const SizedBox(height: 10);
+
   late final CartManagementBloc cartBloc = CartManagementBloc();
+
   QuantityBloc quantityBloc = QuantityBloc();
+
   late SelectedVariantCubit cubit;
 
   @override
@@ -59,18 +71,18 @@ class AddToCart extends StatelessWidget {
   }
 
   _price(BuildContext context) {
-    if (product.price == 0) {
+    if (widget.product.price == 0) {
       return BlocBuilder<SelectedVariantCubit, SelectedVariantState>(
         builder: (context, state) {
           var selected = (state as SelectedVariantInitialState).selected;
           return Text(
-            '₹${Utils.calculateOffer(product, selected)}',
+            '₹${Utils.calculateOffer(widget.product, selected)}',
             style: TextStyle(color: Theme.of(context).primaryColor),
           );
         },
       );
     }
-    return Text('₹${Utils.calculateOffer(product)}',
+    return Text('₹${Utils.calculateOffer(widget.product)}',
         style: TextStyle(color: Theme.of(context).primaryColor));
   }
 
@@ -110,7 +122,7 @@ class AddToCart extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(Utils.capitalizeEachWord(product.name)),
+          Text(Utils.capitalizeEachWord(widget.product.name)),
           _price(context),
         ],
       ),
@@ -119,7 +131,7 @@ class AddToCart extends StatelessWidget {
 
   VariantSelectionWidget _variantSelectionWidget() {
     return VariantSelectionWidget(
-        product: product,
+        product: widget.product,
         selectedVariant: selectedVariant,
         cartBloc: cartBloc,
         parcel: false);
@@ -129,7 +141,7 @@ class AddToCart extends StatelessWidget {
     return ParcelChoicechip(
         quantityBloc: quantityBloc,
         cartBloc: cartBloc,
-        product: product,
+        product: widget.product,
         getSelectedvarint: getSelectedVariant);
   }
 
@@ -137,30 +149,32 @@ class AddToCart extends StatelessWidget {
     return AddToCartButton(
         cartBloc: cartBloc,
         quantityBloc: quantityBloc,
-        product: product,
+        product: widget.product,
         getSelectedVariant: getSelectedVariant,
         cookingRequest: getCookingRequest,
         fromCart: false,
-        fromSearch: fromSearch,
+        fromSearch: widget.fromSearch,
         resetField: resetFields);
   }
 
   String getSelectedVariant() {
-    var entries = product.variants.entries.toList();
+    var entries = widget.product.variants.entries.toList();
 
     entries.sort((a, b) => a.value.compareTo(b.value));
-    if (product.price == 0) {
+    if (widget.product.price == 0) {
       cubit.onSelectionChanged(entries.first.key);
     }
 
     int index = selectedVariant.indexWhere((element) => element);
-    String variant =
-        product.price != 0 ? '' : (index != -1 ? entries[index].key : '');
+    String variant = widget.product.price != 0
+        ? ''
+        : (index != -1 ? entries[index].key : '');
     return variant;
   }
 
   //-------------callback for getting thecooking request----
   String getCookingRequest() => controller.text.trim();
+
   //------------callback for resetting the field------------
   void resetFields() {
     controller.clear();
@@ -169,11 +183,11 @@ class AddToCart extends StatelessWidget {
 
   void intialise(BuildContext context) {
     selectedVariant =
-        List.generate(product.variants.length, (index) => index == 0);
+        List.generate(widget.product.variants.length, (index) => index == 0);
     context.read<SelectedVariantCubit>();
     cartBloc.add(CartManagementCheckForDuplicate(
         parcel: false,
-        productId: product.id,
+        productId: widget.product.id,
         selectedVarinat: getSelectedVariant()));
   }
 }

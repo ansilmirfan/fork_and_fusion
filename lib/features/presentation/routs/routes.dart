@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:fork_and_fusion/features/domain/entity/order_entity.dart';
 import 'package:fork_and_fusion/features/domain/entity/product.dart';
 import 'package:fork_and_fusion/features/presentation/pages/bottom_nav_bar/bottom_nav_bar.dart';
+import 'package:fork_and_fusion/features/presentation/pages/bottom_nav_bar/history/pages/picked_data.dart';
+import 'package:fork_and_fusion/features/presentation/pages/bottom_nav_bar/settings/pages/about_the_app.dart';
+import 'package:fork_and_fusion/features/presentation/pages/bottom_nav_bar/settings/pages/contact_us.dart';
 import 'package:fork_and_fusion/features/presentation/pages/bottom_nav_bar/settings/pages/favourite.dart';
+import 'package:fork_and_fusion/features/presentation/pages/bottom_nav_bar/settings/pages/privacy_policy.dart';
+import 'package:fork_and_fusion/features/presentation/pages/bottom_nav_bar/settings/pages/terms_of_service.dart';
 import 'package:fork_and_fusion/features/presentation/pages/intro_pages/onboard/onboard.dart';
 import 'package:fork_and_fusion/features/presentation/pages/order_view/order_view.dart';
 import 'package:fork_and_fusion/features/presentation/pages/product_view/product_view.dart';
@@ -24,9 +30,16 @@ class Routes {
       case '/signup':
         return MaterialPageRoute(builder: (context) => const SignUpPage());
       case '/bottomnav':
-        return MaterialPageRoute(builder: (context) => const BottomNavBar());
+        if (args is int) {
+          return MaterialPageRoute(
+              builder: (context) => BottomNavBar(
+                    currentPage: args,
+                  ));
+        }
+        return errorRoutes();
+
       case '/qrscanner':
-        return MaterialPageRoute(builder: (context) => const QRCodeScanner());
+        return MaterialPageRoute(builder: (context) => QRCodeScanner());
       case '/search':
         return MaterialPageRoute(builder: (context) => Search());
       case '/productview':
@@ -44,14 +57,29 @@ class Routes {
         return errorRoutes();
 
       case '/orderview':
-        if (args is bool) {
+        if (args is OrderEntity) {
           return MaterialPageRoute(
-            builder: (context) => OrderView(today: args),
+            builder: (context) => OrderView(order: args),
           );
         }
         return errorRoutes();
-      case 'favourite':
+      case '/favourite':
         return MaterialPageRoute(builder: (context) => const Favourite());
+      case '/privacy policy':
+        return MaterialPageRoute(builder: (context) => const PrivacyPolicy());
+      case '/terms of service':
+        return MaterialPageRoute(builder: (context) => const TermsOfService());
+      case '/about the app':
+        return MaterialPageRoute(builder: (context) => const AboutApp());
+      case '/contact us':
+        return MaterialPageRoute(builder: (context) => const ContactUs());
+      case '/picked datapage':
+        if (args is List<OrderEntity>) {
+          return MaterialPageRoute(
+              builder: (context) => PickedDataPage(orders: args));
+        }
+        return errorRoutes();
+
       default:
         return errorRoutes();
     }

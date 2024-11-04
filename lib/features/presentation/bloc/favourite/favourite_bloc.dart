@@ -15,7 +15,6 @@ part 'favourite_state.dart';
 
 class FavouriteBloc extends Bloc<FavouriteEvent, FavouriteState> {
   FavouriteBloc() : super(FavouriteInitialState()) {
-    
     on<CheckForFavouriteEvent>(checkForFavouriteEvent);
     on<AddToFavouriteEvent>(addToFavouriteEvent);
     on<RemoveFromFavouriteEvent>(removeFromFavouriteEvent);
@@ -32,7 +31,7 @@ class FavouriteBloc extends Bloc<FavouriteEvent, FavouriteState> {
       emit(FavouriteStatusState(result));
     } catch (e) {
       log(e.toString());
-      emit(FavouriteErrorState('Network error'));
+      emit(FavouriteErrorState('Network error $e'));
     }
   }
 
@@ -45,7 +44,7 @@ class FavouriteBloc extends Bloc<FavouriteEvent, FavouriteState> {
       add(CheckForFavouriteEvent(event.id));
     } catch (e) {
       log(e.toString());
-      emit(FavouriteErrorState('Network error'));
+      emit(FavouriteErrorState('Network error $e'));
     }
   }
 
@@ -59,7 +58,7 @@ class FavouriteBloc extends Bloc<FavouriteEvent, FavouriteState> {
       add(CheckForFavouriteEvent(event.id));
     } catch (e) {
       log(e.toString());
-      emit(FavouriteErrorState('Network error'));
+      emit(FavouriteErrorState('Network error $e'));
     }
   }
 

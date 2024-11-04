@@ -10,6 +10,7 @@ final class SelectedCategoryInitialState extends SelectedCategoryState {
 
 final class SelectedCategoryChangedState extends SelectedCategoryState {
   String category;
+  List<ProductEntity> filtered;
   int index;
-  SelectedCategoryChangedState(this.category, this.index);
+  SelectedCategoryChangedState(this.category, this.index, this.filtered);
 }

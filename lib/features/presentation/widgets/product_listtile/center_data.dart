@@ -35,11 +35,12 @@ class CenterData {
                           fontSize: 13, color: Theme.of(context).primaryColor),
                     )
                   : Wrap(
-                      children: [
-                        const Icon(Icons.star_border_purple500),
-                        Text('${Utils.calculateRating(data.rating)}')
-                      ],
-                    ),
+                      children: List.generate(
+                      Utils.calculateRating(data.rating),
+                      (index) => Icon(Icons.star,color: Colors.amber,) ,
+                    )
+                      
+                      ),
             ],
           ),
         ));
@@ -91,31 +92,40 @@ class CenterData {
         ));
   }
 
-  static Expanded historyView(BuildContext context) {
+  static Expanded historyView(BuildContext context, CartEntity cart) {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.all(5),
         alignment: Alignment.centerLeft,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            //-------product name------------
-            Text(Utils.capitalizeEachWord('name')),
-            //-----------quantity--------------------
-            const Text('X 2'),
-            //--------------price---------------
-            Text(
-              '₹250',
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium
-                  ?.copyWith(color: Theme.of(context).primaryColor),
-            ),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              //-------product name------------
+              Text(Utils.capitalizeEachWord(cart.product.name)),
+              //-----------quantity--------------------
+              Text('X ${cart.quantity}'),
+              //--------------price---------------
+              Text(
+                '₹${Utils.calculateOffer(cart.product, cart.selectedType)}',
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium
+                    ?.copyWith(color: Theme.of(context).primaryColor),
+              ),
+              Visibility(
+                  visible: cart.selectedType.isNotEmpty,
+                  child: Text(cart.selectedType)),
+              Visibility(visible: cart.parcel, child: Text('Parcel')),
 
-            Text('Cooking',
-                style: TextStyle(color: Theme.of(context).primaryColor)),
-          ],
+              Visibility(
+                visible: cart.status.isNotEmpty,
+                child: Text(cart.status,
+                    style: TextStyle(color: Theme.of(context).primaryColor)),
+              ),
+            ],
+          ),
         ),
       ),
     );

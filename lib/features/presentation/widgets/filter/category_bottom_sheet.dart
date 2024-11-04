@@ -2,24 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fork_and_fusion/core/shared/constants.dart';
 import 'package:fork_and_fusion/core/utils/utils.dart';
+import 'package:fork_and_fusion/features/domain/entity/product.dart';
 import 'package:fork_and_fusion/features/presentation/bloc/category_bloc/category_bloc.dart';
 import 'package:fork_and_fusion/features/presentation/cubit/selected_category_cubit/selected_category_cubit.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/cache_image.dart';
 
-categoryBottomSheet(BuildContext context) {
+categoryBottomSheet(BuildContext context, List<ProductEntity> data) {
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
     isDismissible: true,
     builder: (context) {
-      return CategoryBottomSheetBody();
+      return CategoryBottomSheetBody(
+        data: data,
+      );
     },
   );
 }
 
 class CategoryBottomSheetBody extends StatelessWidget {
-  const CategoryBottomSheetBody({super.key});
+  final List<ProductEntity> data;
+  const CategoryBottomSheetBody({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +42,7 @@ class CategoryBottomSheetBody extends StatelessWidget {
               color: const Color.fromARGB(255, 239, 238, 238),
               borderRadius: Constants.radius,
             ),
-            child: _listview(scrollController, context),
+            child: _listview(scrollController, context, data),
           ),
         );
       },
@@ -46,7 +50,9 @@ class CategoryBottomSheetBody extends StatelessWidget {
   }
 
   BlocBuilder<CategoryBloc, CategoryState> _listview(
-      ScrollController scrollController, BuildContext context) {
+      ScrollController scrollController,
+      BuildContext context,
+      List<ProductEntity> data) {
     final selectedCategoryState = context.read<SelectedCategoryCubit>().state;
 
     String selected = 'all';
@@ -86,9 +92,8 @@ class CategoryBottomSheetBody extends StatelessWidget {
                   ),
                   value: selected == state.categories[index].id,
                   onChanged: (value) {
-                    context
-                        .read<SelectedCategoryCubit>()
-                        .onSelectedCategory(state.categories[index].id, index);
+                    context.read<SelectedCategoryCubit>().onSelectedCategory(
+                        state.categories[index].id, index, data);
                     Navigator.of(context).pop();
                   },
                 ),

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
@@ -25,7 +24,6 @@ class QuantityBloc extends Bloc<QuantityEvent, QuantityState> {
       bool parcel = (state as QuantityInitialState).parcel;
       if (current != 1) {
         quantity -= 1;
-        log(quantity);
         emit(QuantityInitialState(current - 1, parcel));
       }
     }
@@ -36,10 +34,9 @@ class QuantityBloc extends Bloc<QuantityEvent, QuantityState> {
     if (state is QuantityInitialState) {
       int current = (state as QuantityInitialState).quantity;
       bool parcel = (state as QuantityInitialState).parcel;
-      if (current != 10) {
-        quantity += 1;
-        emit(QuantityInitialState(current + 1, parcel));
-      }
+
+      quantity += 1;
+      emit(QuantityInitialState(current + 1, parcel));
     }
   }
 

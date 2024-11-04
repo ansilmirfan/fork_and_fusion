@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
@@ -83,8 +82,6 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
           return price >= event.rangeValues.start.toInt() &&
               price < event.rangeValues.end.toInt();
         }).toList();
-        log('name state ${event.nameState}');
-        log('price state ${event.priceState}');
         //-----------filter by name-----------
         if (event.nameState == FilterStates.asc) {
           data.sort((a, b) => a.name.compareTo(b.name));

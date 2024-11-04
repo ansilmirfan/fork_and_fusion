@@ -8,10 +8,10 @@ import 'package:fork_and_fusion/features/presentation/widgets/loading.dart';
 
 class Today extends StatelessWidget {
   const Today({super.key});
-
+    final gap = const SizedBox(height: 10);
   @override
   Widget build(BuildContext context) {
-    var gap = const SizedBox(height: 10);
+
     return RefreshIndicator(
       onRefresh: () async {
         context.read<OrderBloc>().add(OrderGetAllEvent());
@@ -24,19 +24,7 @@ class Today extends StatelessWidget {
               return Loading();
             }
             if (state is OrderCompletedState) {
-              if (state.orders.isEmpty) {
-                return EmptyMessage(
-                    message: "No orders today. Ready to place one?");
-              }
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  gap,
-                  _subtotal(context, state.orders),
-                  gap,
-                  _listView(state.orders),
-                ],
-              );
+              return _buildBody(state.orders, context);
             }
             return EmptyMessage(message: 'Network Error');
           },
@@ -45,20 +33,31 @@ class Today extends StatelessWidget {
     );
   }
 
-  Widget _listView(List<OrderEntity> orders) {
-    final today = DateTime.now();
-    orders = orders
-        .where((e) =>
-            e.date.day == today.day &&
-            e.date.month == today.month &&
-            e.date.year == today.year)
-        .toList();
-    orders = orders.reversed.toList();
+  StatelessWidget _buildBody(List<OrderEntity>order, BuildContext context) {
+      List<OrderEntity> orders = List.from(todaysOrders(order));
+    if (orders.isEmpty) {
+      return EmptyMessage(
+          message: "No orders today. Ready to place one?");
+    }
+    return SingleChildScrollView(
+      physics: NeverScrollableScrollPhysics(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          gap,
+          _subtotal(context, orders),
+          gap,
+          _listView(orders),
+        ],
+      ),
+    );
+  }
 
+  Widget _listView(List<OrderEntity> orders) {
     return ListView.builder(
       padding: EdgeInsets.zero,
       shrinkWrap: true,
-      physics: const AlwaysScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       itemCount: orders.length,
       itemBuilder: (context, index) => HistoryListTile(
         order: orders[index],
@@ -72,5 +71,16 @@ class Today extends StatelessWidget {
       'Subtotal ₹$total',
       style: Theme.of(context).textTheme.headlineSmall,
     );
+  }
+
+  List<OrderEntity> todaysOrders(List<OrderEntity> orders) {
+    final today = DateTime.now();
+    orders = orders
+        .where((e) =>
+            e.date.day == today.day &&
+            e.date.month == today.month &&
+            e.date.year == today.year)
+        .toList();
+    return orders;
   }
 }
