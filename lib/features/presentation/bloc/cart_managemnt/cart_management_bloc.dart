@@ -94,17 +94,19 @@ class CartManagementBloc
       //-----------total amount if the user selects the items then the
       //--------subtotal is the sum of selected items otherwise the sum of all amount
       int subtotal = 0;
-      if (isSelected) {
-        subtotal = cartItems
-            .where((e) => e.isSelected)
-            .map((e) =>
-                Utils.calculateOffer(e.product, e.selectedType) * e.quantity)
-            .reduce((a, b) => a + b);
-      } else {
-        subtotal = cartItems
-            .map((e) =>
-                Utils.calculateOffer(e.product, e.selectedType) * e.quantity)
-            .reduce((a, b) => a + b);
+      if (cartItems.isNotEmpty) {
+        if (isSelected) {
+          subtotal = cartItems
+              .where((e) => e.isSelected)
+              .map((e) =>
+                  Utils.calculateOffer(e.product, e.selectedType) * e.quantity)
+              .reduce((a, b) => a + b);
+        } else {
+          subtotal = cartItems
+              .map((e) =>
+                  Utils.calculateOffer(e.product, e.selectedType) * e.quantity)
+              .reduce((a, b) => a + b);
+        }
       }
 
       emit(CartManagementCompletedState(cartItems, isSelected, len, subtotal));
