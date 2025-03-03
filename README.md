@@ -4,7 +4,7 @@
 
 ## 📥 Download the App
 
-![Download on Amazone AppStore](https://www.amazon.com/dp/B0DLWZYFTZ/ref=apps_sf_sta )
+[Download on Amazone AppStore](https://www.amazon.com/dp/B0DLWZYFTZ/ref=apps_sf_sta )
 
 ## Features
 
