@@ -2,6 +2,10 @@
 
 **Fork and Fusion** is a restaurant application designed to enhance the dining experience by allowing customers to scan QR codes from their tables, browse the restaurant menu, and order directly from their devices. The app streamlines ordering and minimizes wait times, providing a seamless e-commerce-like experience within the restaurant.
 
+## 📥 Download the App
+
+![Download on Amazone AppStore](https://www.amazon.com/dp/B0DLWZYFTZ/ref=apps_sf_sta )
+
 ## Features
 
 - **QR Code Scanning**  
@@ -38,45 +42,64 @@
 
 ### Login Screen
 
-![Login Screen](screenshots/login%20page.jpg)
+<p align="center">
+  <img src="screenshots/login page.jpg" width="300px" alt="Login Screen">
+</p>
 
 ### Home Screen Before Scanning
 
-![Home Screen Before Scanning](screenshots/Home%20page%20before%20scanning.jpg)
+<p align="center">
+  <img src="screenshots/Home page before scanning.jpg" width="300px" alt="Home Screen Before Scanning">
+</p>
 
 ### Home Screen After Scanning
 
-![Home Screen After Scanning 1](screenshots/Home%20page%20after%20scanning%201.jpg)
-
-![Home Screen After Scanning 2](screenshots/Home%20page%20after%20scanning%202.jpg)
+<p align="center">
+  <img src="screenshots/Home page after scanning 1.jpg" width="300px" alt="Home Screen After Scanning 1">
+  <img src="screenshots/Home page after scanning 2.jpg" width="300px" alt="Home Screen After Scanning 2">
+</p>
 
 ### Detailed View Screen
 
-![Detailed View Screen 1](screenshots/Detailed%20view%20page%201.jpg)
-![Detailed View Screen 2](screenshots/Detailed%20view%20page%202.jpg)
+<p align="center">
+  <img src="screenshots/Detailed view page 1.jpg" width="300px" alt="Detailed View Screen 1">
+  <img src="screenshots/Detailed view page 2.jpg" width="300px" alt="Detailed View Screen 2">
+</p>
 
 ### Search Screen
 
-![Search Screen](screenshots/Search%20page.jpg)
-![Search Filter](screenshots/Bottomheet%20filter.jpg)
-![Search Filter Category](screenshots/Bottomsheet%20categories.jpg)
+<p align="center">
+  <img src="screenshots/Search page.jpg" width="300px" alt="Search Screen">
+  <img src="screenshots/Bottomheet filter.jpg" width="300px" alt="Search Filter">
+  <img src="screenshots/Bottomsheet categories.jpg" width="300px" alt="Search Filter Category">
+</p>
 
 ### Order Screen
 
-![Order Screen](screenshots/Order%20page.jpg)
+<p align="center">
+  <img src="screenshots/Order page.jpg" width="300px" alt="Order Screen">
+</p>
 
 ### Cart Screen
 
-![Cart Screen](screenshots/Cart%20page.jpg)
+<p align="center">
+  <img src="screenshots/Cart page.jpg" width="300px" alt="Cart Screen">
+</p>
 
 ### Settings Screen
 
-![Settings Screen](screenshots/Settings.jpg)
+<p align="center">
+  <img src="screenshots/Settings.jpg" width="300px" alt="Settings Screen">
+</p>
 
 ### Favourites Screen
 
-![Favourites Screen](screenshots/Favourites.jpg)
+<p align="center">
+  <img src="screenshots/Favourites.jpg" width="300px" alt="Favourites Screen">
+</p>
 
 ### Add To Cart Bottomsheet
 
-![Add To Cart Bottomsheet](screenshots/Bottomsheet%20add%20to%20cart.jpg)
+<p align="center">
+  <img src="screenshots/Bottomsheet add to cart.jpg" width="300px" alt="Add To Cart Bottomsheet">
+</p>
