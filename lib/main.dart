@@ -23,7 +23,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   if (kIsWeb) {
-    
     await Firebase.initializeApp(options: Services.firebaseOptions);
   } else {
     await Firebase.initializeApp();

@@ -1,10 +1,13 @@
 import 'dart:developer';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fork_and_fusion/core/shared/constants.dart';
+import 'package:fork_and_fusion/core/utils/utils.dart';
 import 'package:fork_and_fusion/features/domain/entity/cart_entity.dart';
 import 'package:fork_and_fusion/features/domain/entity/order_entity.dart';
 import 'package:fork_and_fusion/features/presentation/bloc/cart_managemnt/cart_management_bloc.dart';
+import 'package:fork_and_fusion/features/presentation/pages/bottom_nav_bar/cart/pages/payment_success.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/buttons/custom_eleavated_button.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/custome_appbar.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/empty_message.dart';
@@ -164,9 +167,22 @@ class Cart extends StatelessWidget {
       visible: isEmpty,
       child: CustomTextButton(
         text: 'Proceed to buy ($selectedLength item)',
-        onPressed: () => context
-            .read<CartManagementBloc>()
-            .add(CartManagementProceedToBuyEvent()),
+        onPressed: () {
+          if (kIsWeb) {
+            Navigator.of(context)
+                .push(MaterialPageRoute(
+              builder: (context) => PaymentSuccessPage(),
+            ))
+                .then((value) {
+              String paymentId = Utils.generateUniquePaymentId();
+              _placeOrder(paymentId);
+            });
+          } else {
+            context
+                .read<CartManagementBloc>()
+                .add(CartManagementProceedToBuyEvent());
+          }
+        },
       ),
     );
   }
@@ -187,6 +203,10 @@ class Cart extends StatelessWidget {
 
   onSuccessCallback(value) {
     var paymentId = value['data']['id'];
+    _placeOrder(paymentId);
+  }
+
+  void _placeOrder(paymentId) {
     cartBloc.add(CartManagementPlaceOrderEvent(
       OrderEntity(
           id: '',

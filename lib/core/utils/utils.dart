@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:fork_and_fusion/features/domain/entity/category.dart';
 import 'package:fork_and_fusion/features/domain/entity/product.dart';
 
@@ -86,5 +88,19 @@ class Utils {
 
   static bool isToday(DateTime date) {
     return formatDate(date) == formatDate(DateTime.now());
+  }
+
+  static String generateUniquePaymentId() {
+    int timestamp = DateTime.now().millisecondsSinceEpoch;
+
+    int randomPart = Random().nextInt(10000);
+
+    String paymentId = '$timestamp$randomPart';
+
+    if (paymentId.length < 10) {
+      paymentId = paymentId.padRight(10, '0');
+    }
+
+    return paymentId.substring(0, 10);
   }
 }

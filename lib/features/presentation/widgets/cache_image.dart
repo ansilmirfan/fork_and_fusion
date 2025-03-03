@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/shimmer.dart/shimmer_loading.dart';
@@ -6,7 +8,7 @@ class CacheImage extends StatelessWidget {
   final double? width;
   final String url;
 
-  CacheImage({
+  const CacheImage({
     super.key,
     this.width,
     this.url =
@@ -30,6 +32,7 @@ class CacheImage extends StatelessWidget {
         )),
       ),
       errorWidget: (context, url, error) {
+        log('error from image:$error');
         return const Icon(Icons.error);
       },
     );

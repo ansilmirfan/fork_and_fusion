@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,13 +11,13 @@ import 'package:fork_and_fusion/features/presentation/widgets/custom_circle_avat
 import 'package:fork_and_fusion/features/presentation/widgets/gap.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/snackbar.dart';
 import 'package:fork_and_fusion/features/presentation/widgets/buttons/square_icon_button.dart';
-import 'package:qr_bar_code_scanner_dialog/qr_bar_code_scanner_dialog.dart';
+// import 'package:qr_bar_code_scanner_dialog/qr_bar_code_scanner_dialog.dart';
 
 class CustomAppbar extends StatelessWidget {
   Widget? bottom;
   bool scanner;
   CustomAppbar({super.key, this.bottom, this.scanner = false});
-  final _qrBarCodeScannerDialogPlugin = QrBarCodeScannerDialog();
+  // final _qrBarCodeScannerDialogPlugin = QrBarCodeScannerDialog();
 
   @override
   Widget build(BuildContext context) {
@@ -55,21 +57,22 @@ class CustomAppbar extends StatelessWidget {
       icon: Icons.qr_code_scanner_rounded,
       onTap: () {
         if (kIsWeb) {
-          _qrBarCodeScannerDialogPlugin.getScannedQrBarCode(
-              context: context,
-              onCode: (code) {
-                if (code != null) {
-                  if (!code.contains('Fork and Fusion')) {
-                    showCustomSnackbar(
-                        context: context,
-                        message:
-                            'Looks like you scanned a QR code that doesn’t belong to our restaurant. Please scan the QR code at your table to view the menu',
-                        isSuccess: false);
-                  }
-                  Constants.table = code;
-                  context.read<ProductBloc>().add(FeatchAllProducts());
-                }
-              });
+          // _qrBarCodeScannerDialogPlugin.getScannedQrBarCode(
+          //     context: context,
+          //     onCode: (code) {
+          //       if (code != null) {
+          //         if (!code.contains('Fork and Fusion')) {
+          //           showCustomSnackbar(
+          //               context: context,
+          //               message:
+          //                   'Looks like you scanned a QR code that doesn’t belong to our restaurant. Please scan the QR code at your table to view the menu',
+          //               isSuccess: false);
+          //         }
+          //         Constants.table = code.split('_').sublist(1, 3).join(' ');
+          //         log(Constants.table);
+          //         context.read<ProductBloc>().add(FeatchAllProducts());
+          //       }
+          //     });
         } else {
           Navigator.of(context).pushNamed('/qrscanner').then((value) {
             if (value is String && !value.contains('Fork and Fusion')) {

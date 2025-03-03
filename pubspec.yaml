@@ -28,23 +28,40 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  # For adding QR code scanning functionality in Android and iOS
   ai_barcode_scanner: ^6.0.1
+  # For adding an animated bottom navigation bar
   animated_notch_bottom_bar: ^1.0.3
+  # For caching images from the network
   cached_network_image: ^3.4.1
+  # For creating image carousels and sliders
   carousel_slider: ^5.0.0
+  # For Firebase Firestore database operations
   cloud_firestore: ^5.4.1
+  # For using Cupertino-style icons
   cupertino_icons: ^1.0.8
+  # For Firebase Authentication
   firebase_auth: ^5.2.1
+  # For initializing Firebase in the app
   firebase_core: ^3.4.1
+  # Flutter SDK dependency
   flutter:
     sdk: flutter
+  # For state management using BLoC pattern
   flutter_bloc: ^8.1.6
+  # For loading environment variables from a `.env` file
   flutter_dotenv: ^5.2.1
+  # For using Google Fonts in the app
   google_fonts: ^6.2.1
+  # For Google authentication
   google_sign_in: ^6.2.1
+  # For integrating PayPal payments
   paypal_payment: ^1.0.0+4
+  # For adding QR code scanning functionality in the web
   qr_bar_code_scanner_dialog: ^0.0.5
+  # For smooth page indicators in carousels and onboarding screens
   smooth_page_indicator: ^1.2.0+3
+  # For launching URLs in the browser or external apps
   url_launcher: ^6.3.1
 
 dev_dependencies:
