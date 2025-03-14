@@ -4,7 +4,7 @@
 
 ## 📥 Download the App
 
-[Download on Amazone AppStore](https://www.amazon.com/dp/B0DLWZYFTZ/ref=apps_sf_sta )
+[Download on Amazone AppStore](https://www.amazon.com/dp/B0DLWZYFTZ/ref=apps_sf_sta)
 
 ## Features
 
@@ -37,6 +37,11 @@
 - **Authentication**: `firebase_auth` and `google_sign_in` for user login and sign-up options.
 - **Payment Integration**: `paypal_payment` for seamless online transactions.
 - **Smooth Page Transitions**: `smooth_page_indicator` for an improved onboarding and carousel experience.
+
+## Admin Side Application
+
+The admin-side application of Fork & Fusion can be accessed at:
+[Admin App Repository](https://github.com/ansilmirfan/fork_and_fusion_admin)
 
 ## App Screenshots
 
